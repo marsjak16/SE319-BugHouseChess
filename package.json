@@ -1,11 +1,17 @@
 {
   "name": "bughouse-chess",
+  "version": "1.0.0",
   "private": true,
   "workspaces": [
     "packages/*"
   ],
   "scripts": {
-  	"dev": "npm run start-frontend",
-  	"start-frontend": "cd packages/frontend && npm run start"
+    "dev": "concurrently --kill-others \"npm run start-frontend\" \"npm run start-backend\"",
+    "start-frontend": "cd packages/frontend && npm run start",
+    "start-backend": "cd packages/backend && npm run dev"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^6.0.0"
   }
 }
