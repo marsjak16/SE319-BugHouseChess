@@ -10,7 +10,7 @@
     "start-frontend": "cd packages/frontend && npm run start",
     "start-backend": "cd packages/backend && npm run dev",
 
-   	"install-deps": "concurrently --kill-others \"npm run install-frontend\" \"npm run install-backend\"",
+   	"install-deps": "npm i && concurrently \"npm run install-frontend\" \"npm run install-backend\"",
    	"install-frontend": "cd packages/frontend && npm install",
    	"install-backend": "cd packages/backend && npm install"
   },
