@@ -4,3 +4,4 @@ Bughouse chess
 Contributors:
 - Marcus Jakubowsky
 - CJ Olsen
+- David Helmick
