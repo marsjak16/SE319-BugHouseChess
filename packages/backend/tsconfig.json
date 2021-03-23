@@ -1,14 +1,17 @@
 {
   "compilerOptions": {
     "target": "es6",
-    "module": "es6",
-    "strict": true,
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
     "incremental": true,
-    "noImplicitReturns": true
+    "noImplicitReturns": true,
+    "allowSyntheticDefaultImports": true
   },
   "files": ["main.ts"],
   "include": [
-    "**/*.ts"
+    "./**/*.ts",
+    "../Public/**/*.ts"
   ],
   "exclude": [
     "node_modules"
