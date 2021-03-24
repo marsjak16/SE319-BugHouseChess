@@ -1,15 +1,30 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
+import logo from './logo.svg';
 import './App.css';
-import {LoginPage} from "./login/login-page";
+import {AuthenticationService} from "./service/AuthenticationService";
 
-function App() {
-  return (
-    <div className="App">
-      <body>
-        <LoginPage/>
-      </body>
-    </div>
-  );
+export interface AppProps {
+
+}
+
+export class App extends React.Component<AppProps> {
+  authService: AuthenticationService;
+
+  constructor(props: AppProps) {
+    super(props);
+
+    this.authService = new AuthenticationService();
+  }
+
+  render(): ReactElement {
+    return (
+        <div className="App">
+      		<body>
+        		<LoginPage/>
+      		</body>
+    	</div>
+    );
+  }
 }
 
 export default App;
