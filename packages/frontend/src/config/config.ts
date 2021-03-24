@@ -1,3 +1,3 @@
 export const Config = {
-  apiUrl: 'localhost:8080'
+  apiUrl: 'https://localhost:8080'
 };

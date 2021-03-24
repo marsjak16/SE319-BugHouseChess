@@ -6,7 +6,7 @@ export class AuthenticationService {
     user?: UserModel;
 
     async login(login: LoginModel): Promise<UserModel> {
-        const response = await fetch(Config.apiUrl + '/accounts/login', {
+        const response = await fetch(Config.apiUrl + '/account/login', {
             method: 'POST',
             body: JSON.stringify(login)
         });
