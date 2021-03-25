@@ -38,10 +38,10 @@ export class App extends React.Component<AppProps, AppState> {
   render(): ReactElement {
     return (
         <div className="App">
-        	<header>
-				<Header user={this.state.user}/>
-          	</header>
       		<BrowserRouter>
+                <header>
+                    <Header user={this.state.user}/>
+                </header>
                 <Switch>
                     <Route path='/login' render={() => <LoginPage authService={this.authService}/>}/>
                 </Switch>

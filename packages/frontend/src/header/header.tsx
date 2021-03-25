@@ -8,10 +8,13 @@ interface HeaderProps {
 
 export class Header extends React.Component<HeaderProps> {
     render(): ReactElement {
-        return <div>
-            <div>
-                {this.props.user?.username ?? <div>
-                    <Link to='/login'/>
+        return <div className='row no-gutters mt-2'>
+            <div className='h2 ml-4'>
+                BugHouse Chess
+            </div>
+            <div className='ml-auto my-auto mr-5'>
+                {this.props.user ? <div>Welcome {this.props.user?.username}</div> : <div>
+                    <Link to='/login'>Login</Link>
                 </div>}
             </div>
         </div>
