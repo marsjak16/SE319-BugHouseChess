@@ -1,14 +1,16 @@
 import React, {CSSProperties, ReactElement} from "react";
 import {LoginModel} from "../../../public/models/account/login-model";
 import _ from "lodash";
-import {AuthenticationService} from "../service/AuthenticationService";
+import {UserModel} from "../../../public/models/account/user-model";
 
 const formStyle: CSSProperties = {
     maxWidth: "350px"
 }
 
+export type LoginCallback = (login: LoginModel) => Promise<UserModel | undefined>
+
 interface LoginPageProps {
-    authService: AuthenticationService
+    loginCallback: LoginCallback
 }
 
 interface LoginPageState {
@@ -22,8 +24,21 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     }
 
     render(): ReactElement {
-        return <div className="row h-100">
-            <form className="col mx-auto my-auto" style={formStyle}>
+        return <div>
+            <div className="card">
+                <div className="card-header">
+                    Testing card headers
+                </div>
+                <div className="card-body">
+                    This is some text within a card body
+                    <ul className="list-group list-group-flush">
+                        <li className="list-group-item">An item</li>
+                        <li className="list-group-item">A second item</li>
+                        <li className="list-group-item">A third item</li>
+                    </ul>
+                </div>
+            </div>
+            <form className="mx-auto my-auto" style={formStyle}>
                 <div className="my-2">
                     <label className="col-4" htmlFor="username">Username</label>
                     <input className="col-8"
@@ -50,7 +65,7 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     }
 
     async login(): Promise<void> {
-        const user = await this.props.authService.login(this.state.login);
+        const user = await this.props.loginCallback(this.state.login);
         console.log(user);
     }
 

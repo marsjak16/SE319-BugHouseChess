@@ -9,7 +9,7 @@ export class AuthenticationService {
             credentials: 'include'
         });
 
-        if (response.status == 200) {
+        if (response.status === 200) {
             return await response.json();
         } else {
             return undefined;
@@ -26,7 +26,7 @@ export class AuthenticationService {
             body: JSON.stringify(login)
         });
 
-        if (response.status == 200) {
+        if (response.status === 200) {
             return response.json();
         } else {
             return undefined;
