@@ -3,12 +3,17 @@ import './App.css';
 import {AuthenticationService} from "./service/AuthenticationService";
 import {LoginPage} from "./login/login-page";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
+import {UserModel} from "../../public/models/account/user-model";
+import _ from "lodash";
+import {Header} from "./header/header";
 
-export interface AppProps {
-	user?: UserModel
+export interface AppProps {}
+
+export interface AppState {
+    user?: UserModel
 }
 
-export class App extends React.Component<AppProps> {
+export class App extends React.Component<AppProps, AppState> {
   authService: AuthenticationService;
 
   constructor(props: AppProps) {
