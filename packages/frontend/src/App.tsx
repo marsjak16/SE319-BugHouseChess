@@ -1,26 +1,48 @@
 import React from 'react';
 import logo from './logo.svg';
 import './App.css';
+import {AuthenticationService} from "./service/AuthenticationService";
+import {Header} from "./header/header";
+import {UserModel} from "../../public/models/account/user-model";
+import _ from 'lodash';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export interface AppProps { }
+
+export interface AppState {
+    user?: UserModel
+}
+
+export class App extends React.Component<AppProps, AppState> {
+  authService: AuthenticationService;
+
+  constructor(props: AppProps) {
+    super(props);
+    this.state = {};
+
+    this.authService = new AuthenticationService();
+  }
+
+  async componentDidMount(): Promise<void> {
+      this.checkAuth();
+  }
+
+    async checkAuth(): Promise<void> {
+      const user = await this.authService.checkAuth();
+
+      const newState: AppState = _.cloneDeep(this.state);
+      newState.user = user;
+      this.setState(newState);
+  }
+
+  render(): ReactElement {
+    return (
+        <div>
+          <header>
+            <Header user={this.state.user}/>
+          </header>
+        </div>
+    );
+  }
 }
 
 export default App;

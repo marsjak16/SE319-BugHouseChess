@@ -1,4 +1,5 @@
 import cookieParser from "cookie-parser";
+import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import ip from 'ip';
@@ -27,12 +28,18 @@ User.find({username: 'test'}, (err: any, result) => {
 
 // Setup the express HTTP endpoints
 const app = express();
+app.use(session({ secret: 'aasdl;gj', resave: true, saveUninitialized: false }));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(cookieParser());
 app.use(bodyParser.json());
-app.use(session({ secret: 'aasdl;gj', resave: true, saveUninitialized: false }));
 app.use(bodyParser.urlencoded({ extended: false }));
+
+// Setup cors
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 
 // Setup passport
 passport.use(User.createStrategy());
