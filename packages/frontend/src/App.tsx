@@ -1,8 +1,8 @@
 import React, {ReactElement} from 'react';
-import logo from './logo.svg';
 import './App.css';
 import {AuthenticationService} from "./service/AuthenticationService";
 import {LoginPage} from "./login/login-page";
+import {BrowserRouter, Switch, Route} from "react-router-dom";
 
 export interface AppProps {
 
@@ -20,9 +20,11 @@ export class App extends React.Component<AppProps> {
   render(): ReactElement {
     return (
         <div className="App">
-      		<body>
-        		<LoginPage authService={this.authService}/>
-      		</body>
+      		<BrowserRouter>
+                <Switch>
+                    <Route path='/login' render={() => <LoginPage authService={this.authService}/>}/>
+                </Switch>
+            </BrowserRouter>
     	</div>
     );
   }

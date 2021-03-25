@@ -22,29 +22,31 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     }
 
     render(): ReactElement {
-        return <form style={formStyle}>
-            <div className="my-2">
-                <label className="col-4" htmlFor="username">Username</label>
-                <input className="col-8"
-                       name="username"
-                       id="username"
-                       type="text"
-                       onChange={event => this.usernameUpdate(event.target.value)}
-                       value={this.state.login.username}/>
-            </div>
-            <div className="my-2">
-                <label className="col-4" htmlFor="password">Password</label>
-                <input className="col-8"
-                       name="password"
-                       id="password"
-                       type="text"
-                       onChange={event => this.passwordUpdate(event.target.value)}
-                       value={this.state.login.password}/>
-            </div>
-            <div className="my-2">
-                <input className="btn btn-primary" type="button" value="Login" onClick={() => this.login()}/>
-            </div>
-        </form>;
+        return <div className="row h-100">
+            <form className="col mx-auto my-auto" style={formStyle}>
+                <div className="my-2">
+                    <label className="col-4" htmlFor="username">Username</label>
+                    <input className="col-8"
+                           name="username"
+                           id="username"
+                           type="text"
+                           onChange={event => this.usernameUpdate(event.target.value)}
+                           value={this.state.login.username}/>
+                </div>
+                <div className="my-2">
+                    <label className="col-4" htmlFor="password">Password</label>
+                    <input className="col-8"
+                           name="password"
+                           id="password"
+                           type="text"
+                           onChange={event => this.passwordUpdate(event.target.value)}
+                           value={this.state.login.password}/>
+                </div>
+                <div className="my-2">
+                    <input className="btn btn-primary" type="button" value="Login" onClick={() => this.login()}/>
+                </div>
+            </form>
+        </div>;
     }
 
     async login(): Promise<void> {
