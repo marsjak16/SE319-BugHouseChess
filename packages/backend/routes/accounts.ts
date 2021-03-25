@@ -5,6 +5,7 @@ import passport from 'passport';
 import {CreateAccountModel} from "../../public/models/account/create-account-model";
 import {UserModel} from "../../public/models/account/user-model";
 import {LoginModel} from "../../public/models/account/login-model";
+import {isAuthenticatedGuard} from "../util/guards";
 
 export const accountRouter = express.Router();
 
@@ -14,6 +15,13 @@ accountRouter.post('/login', passport.authenticate('local'), (req, res) => {
         username: body.username
     });
 });
+
+accountRouter.get('/logout', ((req, res, next) => {
+    req.logout();
+    res.status(200).json({
+       status: 'Successfully logged out'
+    });
+}));
 
 accountRouter.post('/register', (req, res, err) => {
     const body: CreateAccountModel = req.body;
@@ -25,3 +33,9 @@ accountRouter.post('/register', (req, res, err) => {
         res.status(400).json(err);
     });
 });
+
+accountRouter.get('/checkauth', isAuthenticatedGuard, ((req, res, next) => {
+    res.status(200).json({
+        username: req.user.username
+    });
+}));
