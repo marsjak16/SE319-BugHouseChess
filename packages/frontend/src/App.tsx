@@ -44,12 +44,12 @@ export class App extends React.Component<AppProps, AppState> {
         <div className="App">
       		<BrowserRouter>
                 <header>
-                    <Header user={this.state.user}/>
+                    <Route render={props => <Header history={props.history} logoutCallback={() => this.logout()} user={this.state.user}/>}/>
                 </header>
                 <Switch>
                     <Route path='/game' render={() => <GamePage/>}/>
                     <Route path='/login' render={(props) => <LoginPage history={props.history} loginCallback={user => this.login(user)}/>}/>
-                    <Route path='/register' render={(props) => <RegisterPage history={props.history} registerCallback={user => this.register(user)}/>}/>
+                    <Route path='/register' render={(props) => <RegisterPage history={props.history} registerCallback={user => this.authService.register(user)}/>}/>
                 </Switch>
             </BrowserRouter>
     	</div>
@@ -66,8 +66,12 @@ export class App extends React.Component<AppProps, AppState> {
       return user;
   }
 
-  register(create: CreateAccountModel): Promise<UserModel | undefined> {
-      return this.authService.register(create);
+  async logout(): Promise<void> {
+      await this.authService.logout();
+
+      const newState: AppState = _.cloneDeep(this.state);
+      newState.user = undefined;
+      this.setState(newState);
   }
 }
 
