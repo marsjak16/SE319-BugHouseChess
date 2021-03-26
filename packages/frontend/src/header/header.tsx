@@ -13,7 +13,7 @@ const HeaderStyle: CSSProperties = {
 export class Header extends React.Component<HeaderProps> {
     render(): ReactElement {
         return <div className='row no-gutters mt-2 mb-5'>
-            <Link style={HeaderStyle} to='/' className='h2 ml-4'>
+            <Link style={HeaderStyle} to='/game' className='h2 ml-4'>
                 BugHouse Chess
             </Link>
             <div className='ml-auto my-auto mr-5'>

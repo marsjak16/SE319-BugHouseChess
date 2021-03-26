@@ -2,6 +2,7 @@ import React, {ReactElement} from 'react';
 import './App.css';
 import {AuthenticationService} from "./service/AuthenticationService";
 import {LoginPage} from "./login/login-page";
+import {GamePage} from "./game/game-page";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import {UserModel} from "../../public/models/account/user-model";
 import _ from "lodash";
@@ -44,6 +45,7 @@ export class App extends React.Component<AppProps, AppState> {
                 </header>
                 <Switch>
                     <Route path='/login' render={() => <LoginPage authService={this.authService}/>}/>
+                    <Route path='/game' render={() => <GamePage/>}/>
                 </Switch>
             </BrowserRouter>
     	</div>
