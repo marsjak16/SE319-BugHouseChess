@@ -6,6 +6,7 @@ import {BrowserRouter, Switch, Route} from "react-router-dom";
 import {UserModel} from "../../public/models/account/user-model";
 import _ from "lodash";
 import {Header} from "./header/header";
+import {LoginModel} from "../../public/models/account/login-model";
 
 export interface AppProps {}
 
@@ -43,11 +44,21 @@ export class App extends React.Component<AppProps, AppState> {
                     <Header user={this.state.user}/>
                 </header>
                 <Switch>
-                    <Route path='/login' render={() => <LoginPage authService={this.authService}/>}/>
+                    <Route path='/login' render={() => <LoginPage loginCallback={user => this.login(user)}/>}/>
                 </Switch>
             </BrowserRouter>
     	</div>
     );
+  }
+
+  async login(login: LoginModel): Promise<UserModel | undefined> {
+      const user = await  this.authService.login(login);
+
+      const newState: AppState = _.cloneDeep(this.state);
+      newState.user = user;
+      this.setState(newState);
+
+      return user;
   }
 }
 
