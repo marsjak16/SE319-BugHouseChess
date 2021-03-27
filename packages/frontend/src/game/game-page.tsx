@@ -1,14 +1,15 @@
 import React, {Component,CSSProperties} from "react";
+import King from "./library/pieces/King"
 
 const blackSquare: CSSProperties = {
 	width: "60px",
 	height: "60px",
-	backgroundColor: 'black'
+	backgroundColor: 'BurlyWood'
 }
 const whiteSquare: CSSProperties = {
 	width: "60px",
 	height: "60px",
-	backgroundColor: 'white'
+	backgroundColor: 'AntiqueWhite'
 }
 const chessTable: CSSProperties = {
 	backgroundColor: 'lightgrey',
@@ -49,25 +50,25 @@ export class GamePage extends Component{
 					</tr>
 					<tr id="8">
 						<th>8</th>
-						<td id="A" style={whiteSquare}></td>
-						<td id="B" style={blackSquare}></td>
-						<td id="C" style={whiteSquare}></td>
-						<td id="D" style={blackSquare}></td>
-						<td id="E" style={whiteSquare}></td>
-						<td id="F" style={blackSquare}></td>
-						<td id="G" style={whiteSquare}></td>
-						<td id="H" style={blackSquare}></td>
+						<td id="8A" style={whiteSquare}></td>
+						<td id="8B" style={blackSquare}></td>
+						<td id="8C" style={whiteSquare}></td>
+						<td id="8D" style={blackSquare}></td>
+						<td id="8E" style={whiteSquare}></td>
+						<td id="8F" style={blackSquare}></td>
+						<td id="8G" style={whiteSquare}></td>
+						<td id="8H" style={blackSquare}></td>
 					</tr>
 					<tr id="7">
 						<th>7</th>
-						<td id="A" style={blackSquare}></td>
-						<td id="B" style={whiteSquare}></td>
-						<td id="C" style={blackSquare}></td>
-						<td id="D" style={whiteSquare}></td>
-						<td id="E" style={blackSquare}></td>
-						<td id="F" style={whiteSquare}></td>
-						<td id="G" style={blackSquare}></td>
-						<td id="H" style={whiteSquare}></td>
+						<td id="7A" style={blackSquare}></td>
+						<td id="7B" style={whiteSquare}></td>
+						<td id="7C" style={blackSquare}></td>
+						<td id="7D" style={whiteSquare}></td>
+						<td id="7E" style={blackSquare}></td>
+						<td id="7F" style={whiteSquare}></td>
+						<td id="7G" style={blackSquare}></td>
+						<td id="7H" style={whiteSquare}></td>
 					</tr>
 					<tr id="r6">
 						<th>6</th>
@@ -130,7 +131,7 @@ export class GamePage extends Component{
 						<td id="1B" style={whiteSquare}></td>
 						<td id="1C" style={blackSquare}></td>
 						<td id="1D" style={whiteSquare}></td>
-						<td id="1E" style={blackSquare}></td>
+						<td id="1E" style={blackSquare}><King player={1}/></td>
 						<td id="1F" style={whiteSquare}></td>
 						<td id="1G" style={blackSquare}></td>
 						<td id="1H" style={whiteSquare}></td>

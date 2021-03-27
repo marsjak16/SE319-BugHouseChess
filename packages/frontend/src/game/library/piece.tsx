@@ -1,35 +1,11 @@
 import React, { Component } from "react";
 
-export class Piece extends Component {
+export class Piece {
+    protected player: number;
 
-
-    render () {
-        return (
-            <div>
-            {/* TODO Render each piece */}
-            {/*    Piece.King*/}
-            </div>
-        );
+    constructor(player: number) {
+        this.player = player;
     }
-
-    // static King = class King extends Component {
-    //     render () {
-    //         return (
-    //             <div>
-    //                 {/* TODO */}
-    //             </div>
-    //         )
-    //     }
-    // }
 }
 
-// const kingPiece = class KingPiece extends Component {
-//     render () {
-//         return (
-//             <div>
-//             {/* TODO */}
-//             </div>
-//         )
-//     }
-// }
 

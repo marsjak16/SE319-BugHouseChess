@@ -2,6 +2,7 @@ import React, {ReactElement} from 'react';
 import './App.css';
 import {AuthenticationService} from "./service/AuthenticationService";
 import {LoginPage} from "./login/login-page";
+import {GamePage} from "./game/game-page";
 import {BrowserRouter, Switch, Route} from "react-router-dom";
 import {UserModel} from "../../public/models/account/user-model";
 import _ from "lodash";
