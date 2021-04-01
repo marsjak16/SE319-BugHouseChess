@@ -1,14 +1,20 @@
 import React, {Component,CSSProperties} from "react";
+import {King} from "./library/pieces/King";
+import {Queen} from "./library/pieces/Queen";
+import {Bishop} from "./library/pieces/Bishop";
+import {Knight} from "./library/pieces/Knight";
+import {Rook} from "./library/pieces/Rook";
+import {Pawn} from "./library/pieces/Pawn";
 
 const blackSquare: CSSProperties = {
 	width: "60px",
 	height: "60px",
-	backgroundColor: 'black'
+	backgroundColor: 'BurlyWood'
 }
 const whiteSquare: CSSProperties = {
 	width: "60px",
 	height: "60px",
-	backgroundColor: 'white'
+	backgroundColor: 'AntiqueWhite'
 }
 const chessTable: CSSProperties = {
 	backgroundColor: 'lightgrey',
@@ -20,6 +26,7 @@ const chessDiv: CSSProperties = {
 	padding: '10px'
 }
 
+
 export class GamePage extends Component{
     /*populate(){
 		var row = document.getElementById("board1").getElementById("7");
@@ -27,8 +34,7 @@ export class GamePage extends Component{
 			row.getElementById()
 		}
 	}*/
-	
-	
+
 	
 	render(){
         return (
@@ -49,25 +55,25 @@ export class GamePage extends Component{
 					</tr>
 					<tr id="8">
 						<th>8</th>
-						<td id="A" style={whiteSquare}></td>
-						<td id="B" style={blackSquare}></td>
-						<td id="C" style={whiteSquare}></td>
-						<td id="D" style={blackSquare}></td>
-						<td id="E" style={whiteSquare}></td>
-						<td id="F" style={blackSquare}></td>
-						<td id="G" style={whiteSquare}></td>
-						<td id="H" style={blackSquare}></td>
+						<td id="8A" style={whiteSquare}><Rook player={1}/></td>
+						<td id="8B" style={blackSquare}><Knight player={1}/></td>
+						<td id="8C" style={whiteSquare}><Bishop player={1}/></td>
+						<td id="8D" style={blackSquare}><Queen player={1}/></td>
+						<td id="8E" style={whiteSquare}><King player={1}/></td>
+						<td id="8F" style={blackSquare}><Bishop player={1}/></td>
+						<td id="8G" style={whiteSquare}><Knight player={1}/></td>
+						<td id="8H" style={blackSquare}><Rook player={1}/></td>
 					</tr>
 					<tr id="7">
 						<th>7</th>
-						<td id="A" style={blackSquare}></td>
-						<td id="B" style={whiteSquare}></td>
-						<td id="C" style={blackSquare}></td>
-						<td id="D" style={whiteSquare}></td>
-						<td id="E" style={blackSquare}></td>
-						<td id="F" style={whiteSquare}></td>
-						<td id="G" style={blackSquare}></td>
-						<td id="H" style={whiteSquare}></td>
+						<td id="7A" style={blackSquare}><Pawn player={1}/></td>
+						<td id="7B" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="7C" style={blackSquare}><Pawn player={1}/></td>
+						<td id="7D" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="7E" style={blackSquare}><Pawn player={1}/></td>
+						<td id="7F" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="7G" style={blackSquare}><Pawn player={1}/></td>
+						<td id="7H" style={whiteSquare}><Pawn player={1}/></td>
 					</tr>
 					<tr id="r6">
 						<th>6</th>
@@ -115,30 +121,30 @@ export class GamePage extends Component{
 					</tr>
 					<tr id="r2">
 						<th>2</th>
-						<td id="2A" style={whiteSquare}></td>
-						<td id="2B" style={blackSquare}></td>
-						<td id="2C" style={whiteSquare}></td>
-						<td id="2D" style={blackSquare}></td>
-						<td id="2E" style={whiteSquare}></td>
-						<td id="2F" style={blackSquare}></td>
-						<td id="2G" style={whiteSquare}></td>
-						<td id="2H" style={blackSquare}></td>
+						<td id="2A" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="2B" style={blackSquare}><Pawn player={0}/></td>
+						<td id="2C" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="2D" style={blackSquare}><Pawn player={0}/></td>
+						<td id="2E" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="2F" style={blackSquare}><Pawn player={0}/></td>
+						<td id="2G" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="2H" style={blackSquare}><Pawn player={0}/></td>
 					</tr>
 					<tr id="r1">
 						<th>1</th>
-						<td id="1A" style={blackSquare}></td>
-						<td id="1B" style={whiteSquare}></td>
-						<td id="1C" style={blackSquare}></td>
-						<td id="1D" style={whiteSquare}></td>
-						<td id="1E" style={blackSquare}></td>
-						<td id="1F" style={whiteSquare}></td>
-						<td id="1G" style={blackSquare}></td>
-						<td id="1H" style={whiteSquare}></td>
+						<td id="1A" style={blackSquare}><Rook player={0}/></td>
+						<td id="1B" style={whiteSquare}><Knight player={0}/></td>
+						<td id="1C" style={blackSquare}><Bishop player={0}/></td>
+						<td id="1D" style={whiteSquare}><Queen player={0}/></td>
+						<td id="1E" style={blackSquare}><King player={0}/></td>
+						<td id="1F" style={whiteSquare}><Bishop player={0}/></td>
+						<td id="1G" style={blackSquare}><Knight player={0}/></td>
+						<td id="1H" style={whiteSquare}><Rook player={0}/></td>
 					</tr>
 				</table>
 				</div>
 			</div>
-			
+
 			<div style={chessDiv}>
 				<table id="board2" style={chessTable}>
 					<tr>
@@ -154,25 +160,25 @@ export class GamePage extends Component{
 					</tr>
 					<tr id="r8">
 						<th>8</th>
-						<td id="8A" style={whiteSquare}></td>
-						<td id="8B" style={blackSquare}></td>
-						<td id="8C" style={whiteSquare}></td>
-						<td id="8D" style={blackSquare}></td>
-						<td id="8E" style={whiteSquare}></td>
-						<td id="8F" style={blackSquare}></td>
-						<td id="8G" style={whiteSquare}></td>
-						<td id="8H" style={blackSquare}></td>
+						<td id="8A" style={whiteSquare}><Rook player={0}/></td>
+						<td id="8B" style={blackSquare}><Knight player={0}/></td>
+						<td id="8C" style={whiteSquare}><Bishop player={0}/></td>
+						<td id="8D" style={blackSquare}><Queen player={0}/></td>
+						<td id="8E" style={whiteSquare}><King player={0}/></td>
+						<td id="8F" style={blackSquare}><Bishop player={0}/></td>
+						<td id="8G" style={whiteSquare}><Knight player={0}/></td>
+						<td id="8H" style={blackSquare}><Rook player={0}/></td>
 					</tr>
-					<tr id="r7">
+					<tr id="7">
 						<th>7</th>
-						<td id="7A" style={blackSquare}></td>
-						<td id="7B" style={whiteSquare}></td>
-						<td id="7C" style={blackSquare}></td>
-						<td id="7D" style={whiteSquare}></td>
-						<td id="7E" style={blackSquare}></td>
-						<td id="7F" style={whiteSquare}></td>
-						<td id="7G" style={blackSquare}></td>
-						<td id="7H" style={whiteSquare}></td>
+						<td id="7A" style={blackSquare}><Pawn player={0}/></td>
+						<td id="7B" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="7C" style={blackSquare}><Pawn player={0}/></td>
+						<td id="7D" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="7E" style={blackSquare}><Pawn player={0}/></td>
+						<td id="7F" style={whiteSquare}><Pawn player={0}/></td>
+						<td id="7G" style={blackSquare}><Pawn player={0}/></td>
+						<td id="7H" style={whiteSquare}><Pawn player={0}/></td>
 					</tr>
 					<tr id="r6">
 						<th>6</th>
@@ -220,25 +226,25 @@ export class GamePage extends Component{
 					</tr>
 					<tr id="r2">
 						<th>2</th>
-						<td id="2A" style={whiteSquare}></td>
-						<td id="2B" style={blackSquare}></td>
-						<td id="2C" style={whiteSquare}></td>
-						<td id="2D" style={blackSquare}></td>
-						<td id="2E" style={whiteSquare}></td>
-						<td id="2F" style={blackSquare}></td>
-						<td id="2G" style={whiteSquare}></td>
-						<td id="2H" style={blackSquare}></td>
+						<td id="2A" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="2B" style={blackSquare}><Pawn player={1}/></td>
+						<td id="2C" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="2D" style={blackSquare}><Pawn player={1}/></td>
+						<td id="2E" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="2F" style={blackSquare}><Pawn player={1}/></td>
+						<td id="2G" style={whiteSquare}><Pawn player={1}/></td>
+						<td id="2H" style={blackSquare}><Pawn player={1}/></td>
 					</tr>
 					<tr id="r1">
 						<th>1</th>
-						<td id="1A" style={blackSquare}></td>
-						<td id="1B" style={whiteSquare}></td>
-						<td id="1C" style={blackSquare}></td>
-						<td id="1D" style={whiteSquare}></td>
-						<td id="1E" style={blackSquare}></td>
-						<td id="1F" style={whiteSquare}></td>
-						<td id="1G" style={blackSquare}></td>
-						<td id="1H" style={whiteSquare}></td>
+						<td id="1A" style={blackSquare}><Rook player={1}/></td>
+						<td id="1B" style={whiteSquare}><Knight player={1}/></td>
+						<td id="1C" style={blackSquare}><Bishop player={1}/></td>
+						<td id="1D" style={whiteSquare}><Queen player={1}/></td>
+						<td id="1E" style={blackSquare}><King player={1}/></td>
+						<td id="1F" style={whiteSquare}><Bishop player={1}/></td>
+						<td id="1G" style={blackSquare}><Knight player={1}/></td>
+						<td id="1H" style={whiteSquare}><Rook player={1}/></td>
 					</tr>
 				</table>
 			</div>
