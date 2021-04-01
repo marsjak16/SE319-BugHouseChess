@@ -26,8 +26,6 @@ const chessDiv: CSSProperties = {
 	padding: '10px'
 }
 
-// let whitePawn: Piece = new Pawn(1);
-
 
 export class GamePage extends Component{
     /*populate(){
