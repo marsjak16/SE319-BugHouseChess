@@ -2,6 +2,11 @@ import {PieceType} from "./Piece";
 
 export interface Game {
     /**
+     * The unique ID of the game
+     */
+    gameId: string
+
+    /**
      * Time that the clock was started
      */
     clockStart: Date,
