@@ -12,6 +12,11 @@ export interface Game {
     clockDuration: number,
 
     /**
+     * The usernames of the players
+     */
+    playerUsernames: string[]
+
+    /**
      * Game between players 1 and 2
      */
     board1: PieceType[][],
