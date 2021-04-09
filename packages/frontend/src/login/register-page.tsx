@@ -29,24 +29,31 @@ export class RegisterPage extends React.Component<RegisterPageProps, RegisterPag
 
     render(): ReactElement {
         return <div>
-            <form className="mx-auto my-auto" style={formStyle}>
+            <form className="mx-auto my-auto register-form" style={formStyle} noValidate={true}>
                 <div className="my-2 row">
                     <label className="col-4" htmlFor="username">Username</label>
-                    <input className="col-8"
+                    <input className="col-8 form-control"
                            name="username"
                            id="username"
                            type="text"
                            onChange={event => this.usernameUpdate(event.target.value)}
-                           value={this.state.create.username}/>
+                           value={this.state.create.username}
+                           required={true}/>
+                    <div className="invalid-feedback">
+                        Please enter a different non-blank Username, this one is already used.
+                    </div>
                 </div>
                 <div className="my-2 row">
                     <label className="col-4" htmlFor="password">Password</label>
-                    <input className="col-8"
+                    <input className="col-8 form-control"
                            name="password"
                            id="password"
                            type="text"
                            onChange={event => this.passwordUpdate(event.target.value)}
                            value={this.state.create.password}/>
+                    <div className="invalid-feedback">
+                        This field cannot be left blank.
+                    </div>
                 </div>
                 <div className="my-2 row">
                     <input className="offset-4 col-4 btn btn-primary" type="button" value="Register" onClick={() => this.register()}/>
@@ -60,6 +67,9 @@ export class RegisterPage extends React.Component<RegisterPageProps, RegisterPag
 
         if (user) {
             this.props.history.push('/login');
+        }
+        else {
+
         }
     }
 

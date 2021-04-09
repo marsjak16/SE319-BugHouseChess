@@ -27,25 +27,34 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
 
     render(): ReactElement {
         return <div>
-            <form className="mx-auto my-auto" style={formStyle}>
-                <div></div>
+            <form className="mx-auto my-auto login-form" style={formStyle} noValidate={true}>
+                <div className="login-feedback is-invalid">
+                    <div className="form-control invalid-feedback">
+                        The username or password entered is incorrect. Please try again.
+                    </div>
+                </div>
                 <div className="row my-2">
                     <label className="col-4" htmlFor="username">Username</label>
-                    <input className="col-8"
+                    <input className="col-8 form-control is-invalid"
                            name="username"
                            id="username"
                            type="text"
                            onChange={event => this.usernameUpdate(event.target.value)}
-                           value={this.state.login.username}/>
+                           value={this.state.login.username}
+                           required={true}/>
+                    <div className="form-control invalid-feedback">
+                        The username or password entered is incorrect. Please try again.
+                    </div>
                 </div>
                 <div className="row my-2">
                     <label className="col-4" htmlFor="password">Password</label>
-                    <input className="col-8"
+                    <input className="col-8 form-control"
                            name="password"
                            id="password"
                            type="text"
                            onChange={event => this.passwordUpdate(event.target.value)}
-                           value={this.state.login.password}/>
+                           value={this.state.login.password}
+                           required={true}/>
                 </div>
                 <div className="row my-2">
                     <input className="offset-4 col-4 btn btn-primary" type="button" value="Login" onClick={() => this.login()}/>
