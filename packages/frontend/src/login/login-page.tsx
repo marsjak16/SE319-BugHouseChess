@@ -28,6 +28,7 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     render(): ReactElement {
         return <div>
             <form className="mx-auto my-auto" style={formStyle}>
+                <div></div>
                 <div className="row my-2">
                     <label className="col-4" htmlFor="username">Username</label>
                     <input className="col-8"
