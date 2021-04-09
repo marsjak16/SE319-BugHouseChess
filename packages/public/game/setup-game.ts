@@ -46,6 +46,7 @@ function setupBoard(flipped = false): PieceType[][] {
 
 export function setupGame(config: GameConfig): Game {
     return {
+        gameId: config.gameId,
         clockStart: new Date(),
         clockDuration: config.clockDuration,
         playerUsernames: randomizeUsers(config.playerUsernames),
