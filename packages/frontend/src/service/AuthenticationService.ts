@@ -1,6 +1,7 @@
 import {UserModel} from "../../../public/models/account/user-model";
 import {Config} from "../config/config";
 import {LoginModel} from "../../../public/models/account/login-model";
+import {CreateAccountModel} from "../../../public/models/account/create-account-model";
 
 export class AuthenticationService {
     async checkAuth(): Promise<UserModel | undefined> {
@@ -9,7 +10,7 @@ export class AuthenticationService {
             credentials: 'include'
         });
 
-        if (response.status == 200) {
+        if (response.status === 200) {
             return await response.json();
         } else {
             return undefined;
@@ -26,7 +27,24 @@ export class AuthenticationService {
             body: JSON.stringify(login)
         });
 
-        if (response.status == 200) {
+        if (response.status === 200) {
+            return response.json();
+        } else {
+            return undefined;
+        }
+    }
+
+    async register(create: CreateAccountModel): Promise<UserModel | undefined> {
+        const response = await fetch(Config.apiUrl + '/account/register', {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type':  'application/json'
+            },
+            body: JSON.stringify(create)
+        });
+
+        if (response.status === 200) {
             return response.json();
         } else {
             return undefined;

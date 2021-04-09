@@ -1,9 +1,14 @@
 import React, {CSSProperties, ReactElement} from "react";
 import {UserModel} from "../../../public/models/account/user-model";
 import {Link} from "react-router-dom";
+import * as H from "history";
+
+export type logoutCallback = () => Promise<void>
 
 interface HeaderProps {
-    user?: UserModel
+    user?: UserModel,
+    history: H.History,
+    logoutCallback: logoutCallback
 }
 
 const HeaderStyle: CSSProperties = {
@@ -17,10 +22,19 @@ export class Header extends React.Component<HeaderProps> {
                 BugHouse Chess
             </Link>
             <div className='ml-auto my-auto mr-5'>
-                {this.props.user ? <div>Welcome {this.props.user?.username}!</div> : <div>
+                {this.props.user ? <div className='row'>
+                    <span className='my-auto'>Welcome {this.props.user?.username}!</span>
+                    <button className='btn btn-link' onClick={() => this.logout()}>Logout</button>
+                </div> : <div>
                     <Link to='/login'>Login</Link>
                 </div>}
             </div>
         </div>
+    }
+
+    private async logout(): Promise<void> {
+        await this.props.logoutCallback();
+
+        this.props.history.push('/');
     }
 }
