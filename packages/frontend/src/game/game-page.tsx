@@ -47,6 +47,10 @@ export interface GamePageState {
 	game?: Game
 }
 
+function initGamePieces() {
+
+}
+
 export class GamePage extends Component<GamePageProps, GamePageState> {
     private socket!: SocketIOClient.Socket;
 
@@ -54,6 +58,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 		super(props);
 
 		this.state = {};
+		initGamePieces();
 	}
 
 	componentDidMount(): void {
