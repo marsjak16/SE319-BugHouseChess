@@ -12,6 +12,7 @@ import {Bishop} from "./library/pieces/Bishop";
 import {Knight} from "./library/pieces/Knight";
 import {Rook} from "./library/pieces/Rook";
 import {Pawn} from "./library/pieces/Pawn";
+import {UserModel} from "../../../public/models/account/user-model";
 
 const blackSquare: CSSProperties = {
 	width: "60px",
@@ -33,6 +34,10 @@ const chessDiv: CSSProperties = {
 	width: '50%',
 	padding: '10px'
 };
+const timerDiv: CSSProperties = {
+	float: 'right',
+	width: '20%',
+}
 
 export interface GamePageParams {
 	gameId: string
@@ -41,6 +46,7 @@ export interface GamePageParams {
 export interface GamePageProps {
 	history: H.History,
 	match: match<GamePageParams>
+	user?: UserModel
 }
 
 export interface GamePageState {
@@ -102,6 +108,29 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 		<div>
 			<div style={chessDiv}>
 				<div style={{float:'right'}}>
+				<div style={{paddingBottom: '10px'}}>
+				<table id="enemySection1" style={{}}>
+					<tr>
+						<td>
+							<h5 style={{textAlign:'left'}}>Enemy 1</h5>
+						</td>
+						<td>
+							<div style={timerDiv}><h5>5:00</h5></div>
+						</td>
+					</tr>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/br.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bq.png"></img>
+							</div>
+						</td>
+					</tr>
+				</table>
+				</div>
 				<table id="board1" style={chessTable}>
 					<tr>
 						<th></th>
@@ -203,10 +232,57 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 						<td id="1H" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[7][7])}</td>
 					</tr>
 				</table>
+				<div style={{paddingTop: '10px'}}>
+				<table id="player" style={{}}>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wr.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wq.png"></img>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{this.props.user ? <h5 style={{textAlign:'left'}}>{this.props.user?.username}</h5> : 
+											   <h5 style={{textAlign:'left'}}>Player</h5>}
+						</td>
+						<td>
+							<div style={timerDiv}><h5>5:00</h5></div>
+						</td>
+					</tr>
+				</table>
+				</div>
 				</div>
 			</div>
 
 			<div style={chessDiv}>
+			<div style={{paddingBottom: '10px'}}>
+				<table id="enemySection2" style={{}}>
+					<tr>
+						<td>
+							<h5 style={{textAlign:'left'}}>Enemy 2</h5>
+						</td>
+						<td>
+							<div style={timerDiv}><h5>5:00</h5></div>
+						</td>
+					</tr>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wr.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wq.png"></img>
+							</div>
+						</td>
+					</tr>
+				</table>
+				</div>
 				<table id="board2" style={chessTable}>
 					<tr>
 						<th></th>
@@ -308,6 +384,29 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 						<td id="1H" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[7][7])}</td>
 					</tr>
 				</table>
+				<div style={{paddingTop: '10px'}}>
+				<table id="teammate" style={{}}>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/br.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bq.png"></img>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h5 style={{textAlign:'left'}}>Teammate</h5>
+						</td>
+						<td>
+							<div style={timerDiv}><h5>5:00</h5></div>
+						</td>
+					</tr>
+				</table>
+				</div>
 			</div>
 		</div>);
     }
