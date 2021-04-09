@@ -1,4 +1,11 @@
-import React, {Component,CSSProperties} from "react";
+import React, {Component,CSSProperties,ReactElement} from "react";
+import {UserModel} from "../../../public/models/account/user-model";
+
+import {Link} from "react-router-dom";
+
+interface GameProps {
+    user?: UserModel
+}
 
 const blackSquare: CSSProperties = {
 	width: "60px",
@@ -19,22 +26,63 @@ const chessDiv: CSSProperties = {
 	width: '50%',
 	padding: '10px'
 }
+const timerDiv: CSSProperties = {
+	float: 'right',
+	width: '20%',
+}
 
-export class GamePage extends Component{
-    /*populate(){
-		var row = document.getElementById("board1").getElementById("7");
-		for(var i=0;i<8;i++){
-			row.getElementById()
+export class GamePage extends Component<GameProps,any>{
+	constructor(props:GameProps){
+		super(props);
+		this.state = {	seconds1: 300,
+						seconds2: 300,
+						seconds3: 300,
+						seconds4: 300,
+						currentPlayer: 0,
+					  };
+		//this.timer1 = setInterval(this.countDown1,1000);	  
+		//this.countDown1 = this.countDown1.bind(this);
+	}
+
+	/*countDown1(){
+		let current=1;
+		if(current==1){
+			let secs=this.state.seconds1;
+			secs--;
+			this.setState({
+				seconds1: secs
+			});
 		}
 	}*/
-	
-	
 	
 	render(){
         return (
 		<div>
 			<div style={chessDiv}>
 				<div style={{float:'right'}}>
+				<div style={{paddingBottom: '10px'}}>
+				<table id="enemySection1" style={{}}>
+					<tr>
+						<td>
+							<h5 style={{textAlign:'left'}}>Enemy 1</h5>
+						</td>
+						<td>
+							<div style={timerDiv}><h5>{Math.floor(this.state.seconds1/60)}:{(this.state.seconds1%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}</h5></div>
+						</td>
+					</tr>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/br.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bq.png"></img>
+							</div>
+						</td>
+					</tr>
+				</table>
+				</div>
 				<table id="board1" style={chessTable}>
 					<tr>
 						<th></th>
@@ -69,77 +117,124 @@ export class GamePage extends Component{
 						<td id="G" style={blackSquare}></td>
 						<td id="H" style={whiteSquare}></td>
 					</tr>
-					<tr id="r6">
+					<tr id="6">
 						<th>6</th>
-						<td id="6A" style={whiteSquare}></td>
-						<td id="6B" style={blackSquare}></td>
-						<td id="6C" style={whiteSquare}></td>
-						<td id="6D" style={blackSquare}></td>
-						<td id="6E" style={whiteSquare}></td>
-						<td id="6F" style={blackSquare}></td>
-						<td id="6G" style={whiteSquare}></td>
-						<td id="6H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r5">
+					<tr id="5">
 						<th>5</th>
-						<td id="5A" style={blackSquare}></td>
-						<td id="5B" style={whiteSquare}></td>
-						<td id="5C" style={blackSquare}></td>
-						<td id="5D" style={whiteSquare}></td>
-						<td id="5E" style={blackSquare}></td>
-						<td id="5F" style={whiteSquare}></td>
-						<td id="5G" style={blackSquare}></td>
-						<td id="5H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
-					<tr id="r4">
+					<tr id="4">
 						<th>4</th>
-						<td id="4A" style={whiteSquare}></td>
-						<td id="4B" style={blackSquare}></td>
-						<td id="4C" style={whiteSquare}></td>
-						<td id="4D" style={blackSquare}></td>
-						<td id="4E" style={whiteSquare}></td>
-						<td id="4F" style={blackSquare}></td>
-						<td id="4G" style={whiteSquare}></td>
-						<td id="4H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r3">
+					<tr id="3">
 						<th>3</th>
-						<td id="3A" style={blackSquare}></td>
-						<td id="3B" style={whiteSquare}></td>
-						<td id="3C" style={blackSquare}></td>
-						<td id="3D" style={whiteSquare}></td>
-						<td id="3E" style={blackSquare}></td>
-						<td id="3F" style={whiteSquare}></td>
-						<td id="3G" style={blackSquare}></td>
-						<td id="3H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
-					<tr id="r2">
+					<tr id="2">
 						<th>2</th>
-						<td id="2A" style={whiteSquare}></td>
-						<td id="2B" style={blackSquare}></td>
-						<td id="2C" style={whiteSquare}></td>
-						<td id="2D" style={blackSquare}></td>
-						<td id="2E" style={whiteSquare}></td>
-						<td id="2F" style={blackSquare}></td>
-						<td id="2G" style={whiteSquare}></td>
-						<td id="2H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r1">
+					<tr id="1">
 						<th>1</th>
-						<td id="1A" style={blackSquare}></td>
-						<td id="1B" style={whiteSquare}></td>
-						<td id="1C" style={blackSquare}></td>
-						<td id="1D" style={whiteSquare}></td>
-						<td id="1E" style={blackSquare}></td>
-						<td id="1F" style={whiteSquare}></td>
-						<td id="1G" style={blackSquare}></td>
-						<td id="1H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
 				</table>
+				<div style={{paddingTop: '10px'}}>
+				<table id="player" style={{}}>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wr.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wq.png"></img>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							{this.props.user ? <h5 style={{textAlign:'left'}}>{this.props.user?.username}</h5> : 
+											   <h5 style={{textAlign:'left'}}>Player</h5>}
+						</td>
+						<td>
+							<div style={timerDiv}><h5>{Math.floor(this.state.seconds2/60)}:{(this.state.seconds2%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}</h5></div>
+						</td>
+					</tr>
+				</table>
+				</div>
 				</div>
 			</div>
 			
 			<div style={chessDiv}>
+				<div style={{paddingBottom: '10px'}}>
+				<table id="enemySection2" style={{}}>
+					<tr>
+						<td>
+							<h5 style={{textAlign:'left'}}>Enemy 2</h5>
+						</td>
+						<td>
+							<div style={timerDiv}><h5>{Math.floor(this.state.seconds3/60)}:{(this.state.seconds3%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}</h5></div>
+						</td>
+					</tr>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wr.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/wq.png"></img>
+							</div>
+						</td>
+					</tr>
+				</table>
+				</div>
 				<table id="board2" style={chessTable}>
 					<tr>
 						<th></th>
@@ -152,95 +247,118 @@ export class GamePage extends Component{
 						<th>G</th>
 						<th>H</th>
 					</tr>
-					<tr id="r8">
+					<tr id="8">
 						<th>8</th>
-						<td id="8A" style={whiteSquare}></td>
-						<td id="8B" style={blackSquare}></td>
-						<td id="8C" style={whiteSquare}></td>
-						<td id="8D" style={blackSquare}></td>
-						<td id="8E" style={whiteSquare}></td>
-						<td id="8F" style={blackSquare}></td>
-						<td id="8G" style={whiteSquare}></td>
-						<td id="8H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r7">
+					<tr id="7">
 						<th>7</th>
-						<td id="7A" style={blackSquare}></td>
-						<td id="7B" style={whiteSquare}></td>
-						<td id="7C" style={blackSquare}></td>
-						<td id="7D" style={whiteSquare}></td>
-						<td id="7E" style={blackSquare}></td>
-						<td id="7F" style={whiteSquare}></td>
-						<td id="7G" style={blackSquare}></td>
-						<td id="7H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
-					<tr id="r6">
+					<tr id="6">
 						<th>6</th>
-						<td id="6A" style={whiteSquare}></td>
-						<td id="6B" style={blackSquare}></td>
-						<td id="6C" style={whiteSquare}></td>
-						<td id="6D" style={blackSquare}></td>
-						<td id="6E" style={whiteSquare}></td>
-						<td id="6F" style={blackSquare}></td>
-						<td id="6G" style={whiteSquare}></td>
-						<td id="6H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r5">
+					<tr id="5">
 						<th>5</th>
-						<td id="5A" style={blackSquare}></td>
-						<td id="5B" style={whiteSquare}></td>
-						<td id="5C" style={blackSquare}></td>
-						<td id="5D" style={whiteSquare}></td>
-						<td id="5E" style={blackSquare}></td>
-						<td id="5F" style={whiteSquare}></td>
-						<td id="5G" style={blackSquare}></td>
-						<td id="5H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
-					<tr id="r4">
+					<tr id="4">
 						<th>4</th>
-						<td id="4A" style={whiteSquare}></td>
-						<td id="4B" style={blackSquare}></td>
-						<td id="4C" style={whiteSquare}></td>
-						<td id="4D" style={blackSquare}></td>
-						<td id="4E" style={whiteSquare}></td>
-						<td id="4F" style={blackSquare}></td>
-						<td id="4G" style={whiteSquare}></td>
-						<td id="4H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r3">
+					<tr id="3">
 						<th>3</th>
-						<td id="3A" style={blackSquare}></td>
-						<td id="3B" style={whiteSquare}></td>
-						<td id="3C" style={blackSquare}></td>
-						<td id="3D" style={whiteSquare}></td>
-						<td id="3E" style={blackSquare}></td>
-						<td id="3F" style={whiteSquare}></td>
-						<td id="3G" style={blackSquare}></td>
-						<td id="3H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
-					<tr id="r2">
+					<tr id="2">
 						<th>2</th>
-						<td id="2A" style={whiteSquare}></td>
-						<td id="2B" style={blackSquare}></td>
-						<td id="2C" style={whiteSquare}></td>
-						<td id="2D" style={blackSquare}></td>
-						<td id="2E" style={whiteSquare}></td>
-						<td id="2F" style={blackSquare}></td>
-						<td id="2G" style={whiteSquare}></td>
-						<td id="2H" style={blackSquare}></td>
+						<td id="A" style={whiteSquare}></td>
+						<td id="B" style={blackSquare}></td>
+						<td id="C" style={whiteSquare}></td>
+						<td id="D" style={blackSquare}></td>
+						<td id="E" style={whiteSquare}></td>
+						<td id="F" style={blackSquare}></td>
+						<td id="G" style={whiteSquare}></td>
+						<td id="H" style={blackSquare}></td>
 					</tr>
-					<tr id="r1">
+					<tr id="1">
 						<th>1</th>
-						<td id="1A" style={blackSquare}></td>
-						<td id="1B" style={whiteSquare}></td>
-						<td id="1C" style={blackSquare}></td>
-						<td id="1D" style={whiteSquare}></td>
-						<td id="1E" style={blackSquare}></td>
-						<td id="1F" style={whiteSquare}></td>
-						<td id="1G" style={blackSquare}></td>
-						<td id="1H" style={whiteSquare}></td>
+						<td id="A" style={blackSquare}></td>
+						<td id="B" style={whiteSquare}></td>
+						<td id="C" style={blackSquare}></td>
+						<td id="D" style={whiteSquare}></td>
+						<td id="E" style={blackSquare}></td>
+						<td id="F" style={whiteSquare}></td>
+						<td id="G" style={blackSquare}></td>
+						<td id="H" style={whiteSquare}></td>
 					</tr>
 				</table>
+				<div style={{paddingTop: '10px'}}>
+				<table id="teammate" style={{}}>
+					<tr>
+						<td style={{backgroundColor:'lightgrey'}} colSpan={2}>
+							<div style={{width:'505px',height:'70px'}}>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bp.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/br.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bn.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bb.png"></img>
+								<img style={{padding:'10px'}} src="/TempChessPieces/bq.png"></img>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td>
+							<h5 style={{textAlign:'left'}}>Teammate</h5>
+						</td>
+						<td>
+							<div style={timerDiv}><h5>{Math.floor(this.state.seconds4/60)}:{(this.state.seconds4%60).toLocaleString('en-US', {minimumIntegerDigits: 2, useGrouping:false})}</h5></div>
+						</td>
+					</tr>
+				</table>
+				</div>
 			</div>
 		</div>);
     }
