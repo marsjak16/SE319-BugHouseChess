@@ -18,13 +18,21 @@ interface RegisterPageProps  {
 
 interface RegisterPageState {
     create: CreateAccountModel
+    username_valid: 'is-valid' | 'is-invalid' | '',
+    username_error: String,
+    password_valid: 'is-valid' | 'is-invalid' | ''
 }
 
 export class RegisterPage extends React.Component<RegisterPageProps, RegisterPageState> {
 
     constructor(props: RegisterPageProps) {
         super(props);
-        this.state = {create: {username: "", password: ""}};
+        this.state = {
+            create: {username: "", password: ""},
+            username_valid: '',
+            username_error: '',
+            password_valid: ''
+        };
     }
 
     render(): ReactElement {
@@ -32,27 +40,27 @@ export class RegisterPage extends React.Component<RegisterPageProps, RegisterPag
             <form className="mx-auto my-auto register-form" style={formStyle} noValidate={true}>
                 <div className="my-2 row">
                     <label className="col-4" htmlFor="username">Username</label>
-                    <input className="col-8 form-control"
+                    <input className={"col-8 form-control " + this.state.username_valid}
                            name="username"
                            id="username"
                            type="text"
                            onChange={event => this.usernameUpdate(event.target.value)}
                            value={this.state.create.username}
                            required={true}/>
-                    <div className="invalid-feedback">
-                        Please enter a different non-blank Username, this one is already used.
+                    <div className="offset-4 invalid-feedback">
+                        {this.state.username_error}
                     </div>
                 </div>
                 <div className="my-2 row">
                     <label className="col-4" htmlFor="password">Password</label>
-                    <input className="col-8 form-control"
+                    <input className={"col-8 form-control " + this.state.password_valid}
                            name="password"
                            id="password"
                            type="text"
                            onChange={event => this.passwordUpdate(event.target.value)}
                            value={this.state.create.password}/>
-                    <div className="invalid-feedback">
-                        This field cannot be left blank.
+                    <div className="offset-4 invalid-feedback">
+                        Password field cannot be left blank.
                     </div>
                 </div>
                 <div className="my-2 row">
@@ -63,13 +71,34 @@ export class RegisterPage extends React.Component<RegisterPageProps, RegisterPag
     }
 
     async register(): Promise<void> {
-        const user = await this.props.registerCallback(this.state.create);
+        if (this.state.create.password == "" || this.state.create.username == "") {
+            const newState: RegisterPageState = _.cloneDeep(this.state);
 
-        if (user) {
-            this.props.history.push('/login');
+            if (this.state.create.password == "") {
+                newState.password_valid = 'is-invalid';
+            }
+            else {
+                newState.password_valid = 'is-valid';
+            }
+            if (this.state.create.username == "") {
+                newState.username_error = 'Username field cannot be left blank.';
+                newState.username_valid = 'is-invalid';
+            }
+            else {
+                newState.username_valid = 'is-valid';
+            }
+            this.setState(newState);
         }
         else {
-
+            const user = await this.props.registerCallback(this.state.create);
+            if (user) {
+                this.props.history.push('/login');
+            } else {
+                const newState: RegisterPageState = _.cloneDeep(this.state);
+                newState.username_error = 'This username is already taken.'
+                newState.username_valid = 'is-invalid';
+                this.setState(newState);
+            }
         }
     }
 
