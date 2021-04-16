@@ -8,10 +8,6 @@ const formStyle: CSSProperties = {
     maxWidth: "350px"
 }
 
-const errorStyle: CSSProperties = {
-    color: "red"
-}
-
 export type LoginCallback = (login: LoginModel) => Promise<UserModel | undefined>
 
 interface LoginPageProps {
@@ -40,12 +36,7 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     render(): ReactElement {
         return <div>
             <form className="mx-auto my-auto" id="login-form" style={formStyle} noValidate={true}>
-                <div className={this.state.valid_input}>
-                    <div className="invalid-feedback">
-                        The username or password was incorrect.
-                    </div>
-                </div>
-                <span id="error_message" style={errorStyle}>
+                <span id="error_message" style={{color:"red", visibility: this.isHidden()}}>
                     The username or password was incorrect
                 </span>
                 <div className="row my-2">
@@ -79,10 +70,14 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
                     <input className="offset-1 col-3 btn btn-outline-primary" type="button" value="Register" onClick={() => this.props.history.push('/register')}/>
                 </div>
             </form>
-            <div className="invalid-feedback">
-                The username or password was incorrect.
-            </div>
         </div>;
+    }
+
+    isHidden(): "hidden" | undefined {
+        if (this.state.valid_input == "is-invalid") {
+            return undefined;
+        }
+        return "hidden";
     }
 
     async login(): Promise<void> {
