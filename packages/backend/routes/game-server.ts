@@ -1,6 +1,5 @@
 import {Namespace, Server} from "socket.io";
-import {sessionMiddleware} from "../util/session";
-import passport from "passport";
+import {setupNamespaceMiddleware} from "../util/session";
 import {AuthenticationResult} from "../../public/models/account/authentication-result";
 import {Game} from "../../public/models/game/Game";
 import {GameConfig, setupGame} from "../../public/game/setup-game";
@@ -14,17 +13,7 @@ export class GameServer {
         this.game = setupGame(config);
 
         this.io = root.of(`/game/${config.gameId}`);
-        this.io.use((socket, next) => {
-            // @ts-ignore
-            sessionMiddleware(socket.request, {}, next);
-        });
-        this.io.use((socket, next) => {
-            // @ts-ignore
-            passport.initialize()(socket.request, {}, next);
-        });
-        this.io.use((socket, next) => {
-            passport.session()(socket.request, {}, next);
-        });
+        setupNamespaceMiddleware(this.io);
 
         this.io.on('connection', socket => {
             // @ts-ignore
