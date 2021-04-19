@@ -54,7 +54,6 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 		super(props);
 
 		this.state = {};
-		initGamePieces();
 	}
 
 	componentDidMount(): void {
@@ -78,6 +77,11 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 
 	componentWillUnmount(): void {
 		this.socket.close();
+	}
+
+	pieceClick(x: number, y: number, b: number): void {
+		let piece = b === 1? this.state.game?.board1[x][y] : this.state.game?.board2[x][y]
+		console.log(piece)
 	}
 
 	private static renderPiece(type: PieceType | undefined): ReactElement | null {
@@ -117,7 +121,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 					</tr>
 					<tr id="8">
 						<th>8</th>
-						<td id="8A" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[0][0])}</td>
+						<td id="8A" style={whiteSquare} onClick={this.pieceClick.bind(this,0,0, 1)}>{GamePage.renderPiece(this.state.game?.board1[0][0])}</td>
 						<td id="8B" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[0][1])}</td>
 						<td id="8C" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[0][2])}</td>
 						<td id="8D" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[0][3])}</td>
