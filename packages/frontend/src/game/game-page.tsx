@@ -49,6 +49,8 @@ export interface GamePageState {
 
 export class GamePage extends Component<GamePageProps, GamePageState> {
     private socket!: SocketIOClient.Socket;
+    private moveAction: boolean = false;
+	private moveBuffer: PieceType | undefined;
 
     constructor(props: GamePageProps) {
 		super(props);
@@ -80,8 +82,27 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 	}
 
 	pieceClick(x: number, y: number, b: number): void {
-		let piece = b === 1? this.state.game?.board1[x][y] : this.state.game?.board2[x][y]
-		console.log(piece)
+		this.moveAction = !this.moveAction;
+		// get PieceType at clicked coordinates
+		let space = b === 1 ? this.state.game?.board1[x][y] : this.state.game?.board2[x][y];
+
+		// initial click on piece source
+		if (this.moveAction) {
+			this.moveBuffer = space;
+			// TODO display piece movement constraints
+
+		} else { // secondary click on piece destination
+			if (b === 1) {
+				this.setState({game?.board1[x][y]: space});
+			} else {
+				this.setState({game?.board2[x][y]: space});
+			}
+			// TODO set old space to PieceType.EMPTY
+			//this.setState
+
+			// TODO store taken piece
+		}
+
 	}
 
 	private static renderPiece(type: PieceType | undefined): ReactElement | null {
