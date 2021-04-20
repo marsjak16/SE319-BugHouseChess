@@ -468,13 +468,6 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     }
 
     makeFileHeadings(): ReactElement {
-    	const headings = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
-    	let result = <>;
-
-    	for(letter in headings) {
-    		result += letter
-		}
-
-    	return result;
+        return <tr>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <td>{fileName}</td>)}</tr>;
 	}
 }
