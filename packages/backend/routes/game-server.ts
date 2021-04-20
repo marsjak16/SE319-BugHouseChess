@@ -2,6 +2,9 @@ import {Namespace} from "socket.io";
 import {AuthenticationResult} from "../../public/models/account/authentication-result";
 import {Game} from "../../public/models/game/Game";
 import {GameConfig, setupGame} from "../../public/game/setup-game";
+import {DescribePossibleMovement} from "../../public/models/game/describe-possible-movement";
+import {movement} from "../../public/game/movement";
+import {PieceMoveRequest} from "../../public/models/game/piece-move-request";
 
 export class GameServer {
     game: Game;
@@ -36,6 +39,10 @@ export class GameServer {
 
                 socket.emit('game', this.game);
             }
+
+            socket.on('movementRequest', (movementRequest: PieceMoveRequest) => {
+                socket.emit('movementOptions', movement(movementRequest, this.game));
+            })
         });
     }
 }
