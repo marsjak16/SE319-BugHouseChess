@@ -16,35 +16,54 @@ interface LoginPageProps {
 }
 
 interface LoginPageState {
-    login: LoginModel
+    login: LoginModel,
+    valid_input: 'is-valid' | 'is-invalid' | '',
+    password_valid: 'is-invalid' | '',
+    username_valid: 'is-invalid' | ''
 }
 
 export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
     constructor(props: LoginPageProps) {
         super(props);
-        this.state = {login: {username: "", password: ""}};
+        this.state = {
+            login: {username: "", password: ""},
+            valid_input: '',
+            password_valid: '',
+            username_valid: ''
+        };
     }
 
     render(): ReactElement {
         return <div>
-            <form className="mx-auto my-auto" style={formStyle}>
+            <form className="mx-auto my-auto" id="login-form" style={formStyle} noValidate={true}>
+                <span id="error_message" style={{color:"red", visibility: this.isHidden()}}>
+                    The username or password was incorrect
+                </span>
                 <div className="row my-2">
                     <label className="col-4" htmlFor="username">Username</label>
-                    <input className="col-8"
+                    <input className={"col-8 form-control " + this.state.username_valid}
                            name="username"
                            id="username"
                            type="text"
                            onChange={event => this.usernameUpdate(event.target.value)}
-                           value={this.state.login.username}/>
+                           value={this.state.login.username}
+                           required={true}/>
+                    <div className="offset-4 invalid-feedback">
+                        Username field cannot be left blank.
+                    </div>
                 </div>
                 <div className="row my-2">
                     <label className="col-4" htmlFor="password">Password</label>
-                    <input className="col-8"
+                    <input className={"col-8 form-control " + this.state.password_valid}
                            name="password"
                            id="password"
                            type="text"
                            onChange={event => this.passwordUpdate(event.target.value)}
-                           value={this.state.login.password}/>
+                           value={this.state.login.password}
+                           required={true}/>
+                    <div className="offset-4 invalid-feedback">
+                        Password field cannot be left blank.
+                    </div>
                 </div>
                 <div className="row my-2">
                     <input className="offset-4 col-4 btn btn-primary" type="button" value="Login" onClick={() => this.login()}/>
@@ -54,11 +73,42 @@ export class LoginPage extends React.Component<LoginPageProps, LoginPageState> {
         </div>;
     }
 
-    async login(): Promise<void> {
-        const user = await this.props.loginCallback(this.state.login);
+    isHidden(): "hidden" | undefined {
+        if (this.state.valid_input == "is-invalid") {
+            return undefined;
+        }
+        return "hidden";
+    }
 
-        if (user) {
-            this.props.history.push('/');
+    async login(): Promise<void> {
+        if (this.state.login.password == "" || this.state.login.username == "") {
+            const newState: LoginPageState = _.cloneDeep(this.state);
+
+            if (this.state.login.password == "") {
+                newState.password_valid = 'is-invalid';
+            }
+            else {
+                newState.password_valid = '';
+            }
+            if (this.state.login.username == "") {
+                newState.username_valid = 'is-invalid';
+            }
+            else {
+                newState.username_valid = '';
+            }
+            this.setState(newState);
+        }
+        else {
+            const user = await this.props.loginCallback(this.state.login);
+            if (user) {
+                this.props.history.push('/');
+            } else {
+                const newState: LoginPageState = _.cloneDeep(this.state);
+                newState.valid_input = 'is-invalid';
+                newState.username_valid = '';
+                newState.password_valid = '';
+                this.setState(newState);
+            }
         }
     }
 
