@@ -9,19 +9,17 @@
     "dev": "concurrently --kill-others \"npm run start-frontend\" \"npm run start-backend\"",
     "start-frontend": "cd packages/frontend && npm run dev",
     "start-backend": "cd packages/backend && npm run dev",
-    "install-deps": "npm i && concurrently \"npm run install-frontend\" \"npm run install-backend\"",
+    "test": "npm run test-public && npm run test-backend && npm run test-frontend",
+    "test-frontend": "cd packages/frontend && npm run test",
+    "test-backend": "cd packages/backend && npm run test",
+    "test-public": "cd packages/public && npm run test",
+    "install-deps": "npm i && npm run install-frontend && npm run install-backend && npm run install-public",
     "install-frontend": "cd packages/frontend && npm install",
-    "install-backend": "cd packages/backend && npm install"
+    "install-backend": "cd packages/backend && npm install",
+    "install-public": "cd packages/public && npm install"
   },
   "license": "MIT",
   "dependencies": {
-    "@types/cors": "^2.8.10",
-    "concurrently": "^6.0.0",
-    "cors": "^2.8.5",
-    "lodash": "^4.17.21",
-    "mongodb": "^3.6.5"
-  },
-  "devDependencies": {
-    "@types/lodash": "^4.14.168"
+    "concurrently": "^6.0.0"
   }
 }

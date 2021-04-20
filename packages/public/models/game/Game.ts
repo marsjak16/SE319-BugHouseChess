@@ -7,9 +7,9 @@ export interface Game {
     gameId: string
 
     /**
-     * Time that the clock was started
+     * Time that the clock was started as an ISO 8601 timestamp
      */
-    clockStart: Date,
+    clockStart: string,
 
     /**
      * Number of milliseconds on the clock
