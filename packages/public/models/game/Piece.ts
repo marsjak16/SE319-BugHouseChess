@@ -1,15 +1,23 @@
 export enum PieceType {
-    EMPTY,
-    WHITE_PAWN,
-    WHITE_KNIGHT,
-    WHITE_BISHOP,
-    WHITE_ROOK,
-    WHITE_QUEEN,
-    WHITE_KING,
-    BLACK_PAWN,
-    BLACK_KNIGHT,
-    BLACK_BISHOP,
-    BLACK_ROOK,
-    BLACK_QUEEN,
-    BLACK_KING,
+    EMPTY = 'EMPTY',
+    WHITE_PAWN = 'WHITE_PAWN',
+    WHITE_KNIGHT = 'WHITE_KNIGHT',
+    WHITE_BISHOP = 'WHITE_BISHOP',
+    WHITE_ROOK = 'WHITE_ROOK',
+    WHITE_QUEEN = 'WHITE_QUEEN',
+    WHITE_KING = 'WHITE_KING',
+    BLACK_PAWN = 'BLACK_PAWN',
+    BLACK_KNIGHT = 'BLACK_KNIGHT',
+    BLACK_BISHOP = 'BLACK_BISHOP',
+    BLACK_ROOK = 'BLACK_ROOK',
+    BLACK_QUEEN = 'BLACK_QUEEN',
+    BLACK_KING = 'BLACK_KING',
+}
+
+export function isSamePlayer(piece1: PieceType, piece2: PieceType): boolean {
+    if (piece1 == PieceType.EMPTY) {
+        return false;
+    }
+
+    return piece1.substring(0, 5) == piece2.substring(0, 5);
 }
