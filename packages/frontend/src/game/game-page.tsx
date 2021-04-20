@@ -154,7 +154,8 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                         </div>
 
                         <table id="board1" style={chessTable}>
-                            <tr>
+							{makeFileHeadings()}
+							<tr>
                                 <th></th>
                                 <th>A</th>
                                 <th>B</th>
@@ -465,4 +466,15 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                 </div>
             </div>);
     }
+
+    makeFileHeadings(): ReactElement {
+    	const headings = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'];
+    	let result = <>;
+
+    	for(letter in headings) {
+    		result += letter
+		}
+
+    	return result;
+	}
 }
