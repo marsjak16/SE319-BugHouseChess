@@ -1,5 +1,4 @@
-import {Namespace, Server} from "socket.io";
-import {setupNamespaceMiddleware} from "../util/session";
+import {Namespace} from "socket.io";
 import {AuthenticationResult} from "../../public/models/account/authentication-result";
 import {Game} from "../../public/models/game/Game";
 import {GameConfig, setupGame} from "../../public/game/setup-game";
@@ -7,15 +6,10 @@ import {GameConfig, setupGame} from "../../public/game/setup-game";
 export class GameServer {
     game: Game;
 
-    io: Namespace;
-
-    constructor(config: GameConfig, root: Server) {
+    constructor(config: GameConfig, io: Namespace) {
         this.game = setupGame(config);
 
-        this.io = root.of(`/game/${config.gameId}`);
-        setupNamespaceMiddleware(this.io);
-
-        this.io.on('connection', socket => {
+        io.on('connection', socket => {
             // @ts-ignore
             const username: string = socket.request?.session?.passport?.user;
 
@@ -32,6 +26,8 @@ export class GameServer {
                     authenticated: false,
                     message: 'Not in game'
                 });
+
+                socket.conn.close();
             } else {
                 socket.emit('auth', <AuthenticationResult>{
                     authenticated: true,
