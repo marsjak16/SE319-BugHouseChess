@@ -42,7 +42,7 @@ export class GameServer {
 
             socket.on('movementRequest', (movementRequest: PieceMoveRequest) => {
                 socket.emit('movementOptions', movement(movementRequest, this.game));
-            })
+            });
         });
     }
 }
