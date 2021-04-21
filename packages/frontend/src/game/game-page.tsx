@@ -47,10 +47,21 @@ export interface GamePageState {
 	game?: Game
 }
 
+interface MoveProps {
+	action: boolean;
+	buffer: PieceType | undefined;
+	x: number
+	y: number
+	b: number
+}
+
 export class GamePage extends Component<GamePageProps, GamePageState> {
     private socket!: SocketIOClient.Socket;
     private moveAction: boolean = false;
 	private moveBuffer: PieceType | undefined;
+	private moveX: number = 0;
+	private moveY: number = 0;
+	private moveB: number = 0;
 
     constructor(props: GamePageProps) {
 		super(props);
@@ -89,17 +100,26 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 		// initial click on piece source
 		if (this.moveAction) {
 			this.moveBuffer = space;
+			this.moveX = x;
+			this.moveY = y;
+			this.moveB = b;
 			// TODO display piece movement constraints
 
 		} else { // secondary click on piece destination
-			if (b === 1) {
+			if (b !== this.moveB) {
+				//Invalid Move
+			} else if (b === 1) {
 				this.setState({game?.board1[x][y]: space});
+				this.setState({game?.board1[this.moveX][this.moveY]: PieceType.EMPTY});
 			} else {
 				this.setState({game?.board2[x][y]: space});
+				this.setState({game?.board2[this.moveX][this.moveY]: PieceType.EMPTY});
 			}
-			// TODO set old space to PieceType.EMPTY
-			//this.setState
-
+			// reset buffer
+			this.moveX = 0;
+			this.moveY = 0;
+			this.moveB = 0;
+			this.moveBuffer = PieceType.EMPTY;
 			// TODO store taken piece
 		}
 
