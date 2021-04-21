@@ -47,13 +47,6 @@ export interface GamePageState {
 	game?: Game
 }
 
-interface MoveProps {
-	action: boolean;
-	buffer: PieceType | undefined;
-	x: number
-	y: number
-	b: number
-}
 
 export class GamePage extends Component<GamePageProps, GamePageState> {
     private socket!: SocketIOClient.Socket;
@@ -109,11 +102,13 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 			if (b !== this.moveB) {
 				//Invalid Move
 			} else if (b === 1) {
-				this.setState({game?.board1[x][y]: space});
-				this.setState({game?.board1[this.moveX][this.moveY]: PieceType.EMPTY});
+				let newBoard = this.state.game?.board1;
+				newBoard[x][y] = space;
+				this.setState({ game.board1: newBoard });
+				this.setState({ game?.board1[this.moveX][this.moveY]: PieceType.EMPTY });
 			} else {
-				this.setState({game?.board2[x][y]: space});
-				this.setState({game?.board2[this.moveX][this.moveY]: PieceType.EMPTY});
+				this.setState({ game?.board2[x][y]: space });
+				this.setState({ game?.board2[this.moveX][this.moveY]: PieceType.EMPTY });
 			}
 			// reset buffer
 			this.moveX = 0;
