@@ -9,6 +9,11 @@ export interface Game {
     gameId: string
 
     /**
+     * Who has won the game or undefined if the game is still in progress
+     */
+    winningTeam?: 1 | 2;
+
+    /**
      * Time that the clock was started as an ISO 8601 timestamp
      */
     clockStart: string,

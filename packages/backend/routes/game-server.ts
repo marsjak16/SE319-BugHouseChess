@@ -48,6 +48,15 @@ export class GameServer {
             });
 
             socket.on('makeMove', (movement: PossibleMovement) => {
+                // If the game is over don't allow any moves
+                if (this.game.winningTeam) {
+                    socket.emit('moveError', <MoveError>{
+                        message: "You cannot move once the game is over"
+                    });
+
+                    return;
+                }
+
                 // Make sure that the player can move this piece
                 if (movement.playerNum != getPlayerNum(this.game, username)) {
                     socket.emit('moveError', <MoveError>{
