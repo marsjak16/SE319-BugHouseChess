@@ -81,9 +81,28 @@ export class GameServer {
                     return;
                 }
 
-                // Perform the movement
-                this.game = makeMove(this.game, movement);
+                const resultantGame = makeMove(this.game, movement);
 
+                // Make sure that the player is not in check after this move
+                if (isCheck(resultantGame, movement.playerNum)) {
+                    // Send a different message depending on whether the player was already in check beforehand
+                    if (isCheck(this.game, movement.playerNum)) {
+                        socket.emit('moveError', <MoveError>{
+                            message: 'You must move out of check'
+                        });
+
+                        return;
+                    } else {
+                        socket.emit('moveError', <MoveError>{
+                            message: 'You cannot move into check'
+                        });
+
+                        return;
+                    }
+                }
+
+                // Perform the movement
+                this.game = resultantGame;
                 io.emit('game', this.game);
 
                 // Check if the player is in check
@@ -91,12 +110,12 @@ export class GameServer {
                 if (isCheck(this.game, potentiallyCheckedPlayer)) {
                     // Is it a checkmate?
                     if (isCheckmate(this.game, potentiallyCheckedPlayer)) {
-                        socket.emit('check', <CheckStatus>{
+                        io.emit('check', <CheckStatus>{
                             player: potentiallyCheckedPlayer,
                             type: CheckType.CHECKMATE
                         });
                     } else {
-                        socket.emit('check', <CheckStatus>{
+                        io.emit('check', <CheckStatus>{
                             player: potentiallyCheckedPlayer,
                             type: CheckType.CHECK
                         });
