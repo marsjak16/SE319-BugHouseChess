@@ -5,7 +5,7 @@ import {AddressInfo} from "net";
 import {GameServer} from "./game-server";
 import {testSocketSession} from "../util/session";
 import {AuthenticationResult} from "../../public/models/account/authentication-result";
-import {Game} from "../../public/models/game/Game";
+import {Game} from "../../public/models/game/game";
 
 describe('GameServer', () => {
    let server: http.Server;

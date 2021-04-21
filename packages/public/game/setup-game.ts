@@ -1,5 +1,5 @@
-import {Game} from "../models/game/Game";
-import {PieceType} from "../models/game/Piece";
+import {Game} from "../models/game/game";
+import {PieceType} from "../models/game/piece";
 import _ = require("lodash");
 
 export interface GameConfig {

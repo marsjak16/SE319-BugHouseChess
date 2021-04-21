@@ -1,4 +1,4 @@
-import {PieceType} from "./Piece";
+import {PieceType} from "./piece";
 
 export interface Game {
     /**

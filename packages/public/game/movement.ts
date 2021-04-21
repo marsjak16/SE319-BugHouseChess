@@ -1,7 +1,7 @@
 import {PieceMoveRequest} from "../models/game/piece-move-request";
 import {DescribePossibleMovement} from "../models/game/describe-possible-movement";
-import {Game} from "../models/game/Game";
-import {isSamePlayer, PieceType} from "../models/game/Piece";
+import {Game} from "../models/game/game";
+import {isSamePlayer, PieceType} from "../models/game/piece";
 
 export function movement(moveRequest: PieceMoveRequest, game: Game): DescribePossibleMovement[] {
     const board = (moveRequest.boardNum == 1) ? game.board1 : game.board2.reverse();
