@@ -1,11 +1,65 @@
 import {PieceMoveRequest} from "../models/game/piece-move-request";
 import {PossibleMovement} from "../models/game/possible-movement";
 import {Game} from "../models/game/game";
-import {isSamePlayer, PieceType} from "../models/game/piece";
+import {isSamePlayer, isWhite, PieceType} from "../models/game/piece";
+import _ from "lodash";
 
-export function movement(moveRequest: PieceMoveRequest, game: Game): PossibleMovement[] {
+export function makeMove(game: Game, movement: PossibleMovement): Game {
+    const gameCopy = _.cloneDeep(game);
+    const board = (movement.playerNum < 2) ? gameCopy.board1 : gameCopy.board2;
+
+    if (board[movement.toRow][movement.toCol] != PieceType.EMPTY) {
+        let pieces: PieceType[];
+
+        if (movement.playerNum == 1) {
+            pieces = gameCopy.player4Pieces;
+        } else if (movement.playerNum == 2) {
+            pieces = gameCopy.player3Pieces;
+        } else if (movement.playerNum == 3) {
+            pieces = gameCopy.player1Pieces;
+        } else {
+            pieces = gameCopy.player2Pieces;
+        }
+
+        pieces.push(board[movement.toRow][movement.toCol]);
+    }
+
+    board[movement.toRow][movement.toCol] = board[movement.fromRow][movement.fromCol];
+    board[movement.fromRow][movement.fromCol] = PieceType.EMPTY;
+
+    if (movement.playerNum == 1) {
+        gameCopy.game1Turn = 2;
+    } else if (movement.playerNum == 2) {
+        gameCopy.game1Turn = 1;
+    } else if (movement.playerNum == 3) {
+        gameCopy.game2Turn = 4;
+    } else {
+        gameCopy.game2Turn = 3;
+    }
+
+    return gameCopy;
+}
+
+export function findAllMovements(game: Game, boardNum: 1 | 2): PossibleMovement[] {
+    const movements: PossibleMovement[] = [];
+
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col++) {
+            findMovements({
+                col: col,
+                row: row,
+                boardNum: boardNum
+            }, game).forEach(m => movements.push(m));
+        }
+    }
+
+    return  movements;
+}
+
+export function findMovements(moveRequest: PieceMoveRequest, game: Game): PossibleMovement[] {
     const board = (moveRequest.boardNum == 1) ? game.board1 : game.board2.reverse();
     const piece = board[moveRequest.row][moveRequest.col];
+    const playerNum = (moveRequest.boardNum == 1) ? (isWhite(piece) ? 1 : 2) : (isWhite(piece) ? 3 : 4);
     const pieceRow = moveRequest.row;
     const pieceCol = moveRequest.col;
 
@@ -26,9 +80,11 @@ export function movement(moveRequest: PieceMoveRequest, game: Game): PossibleMov
     const pushIfFree = (row: number, col: number) => {
         if (isOpen(row, col)) {
             movements.push({
-               xCord: col,
-               yCord: row,
-               boardNum: moveRequest.boardNum
+                fromCol: moveRequest.col,
+                fromRow: moveRequest.row,
+                toCol: col,
+                toRow: row,
+                playerNum
             });
         }
     };
@@ -36,9 +92,11 @@ export function movement(moveRequest: PieceMoveRequest, game: Game): PossibleMov
     const pushIfCanTake = (row: number, col: number) => {
         if (isOccupied(row, col) && !isSamePlayer(piece, board[row][col])) {
             movements.push({
-                xCord: col,
-                yCord: row,
-                boardNum: moveRequest.boardNum
+                fromCol: moveRequest.col,
+                fromRow: moveRequest.row,
+                toCol: col,
+                toRow: row,
+                playerNum
             });
         }
     };
@@ -104,10 +162,10 @@ export function movement(moveRequest: PieceMoveRequest, game: Game): PossibleMov
 
     if (piece == PieceType.WHITE_KNIGHT || piece == PieceType.BLACK_KNIGHT) {
         [-1, 1].forEach(rowSign => {
-           [-1, 1].forEach(colSign => {
-              pushIfFreeOrCanTake(pieceRow + rowSign, pieceCol + 2 * colSign);
-               pushIfFreeOrCanTake(pieceRow + 2 * rowSign, pieceCol + colSign);
-           });
+            [-1, 1].forEach(colSign => {
+                pushIfFreeOrCanTake(pieceRow + rowSign, pieceCol + 2 * colSign);
+                pushIfFreeOrCanTake(pieceRow + 2 * rowSign, pieceCol + colSign);
+            });
         });
     }
 

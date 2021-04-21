@@ -21,3 +21,7 @@ export function isSamePlayer(piece1: PieceType, piece2: PieceType): boolean {
 
     return piece1.substring(0, 5) == piece2.substring(0, 5);
 }
+
+export function isWhite(piece: PieceType): boolean {
+    return piece.substring(0, 5) == 'WHITE';
+}

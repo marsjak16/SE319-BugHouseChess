@@ -1,5 +1,7 @@
 import {PieceType} from "./piece";
 
+export type PlayerNum = 1 | 2 | 3 | 4;
+
 export interface Game {
     /**
      * The unique ID of the game
@@ -60,4 +62,8 @@ export interface Game {
      * Pieces that player 4 can place
      */
     player4Pieces: PieceType[]
+}
+
+export function getPlayerNum(game: Game, username: string): PlayerNum {
+    return game.playerUsernames.indexOf(username) as PlayerNum;
 }

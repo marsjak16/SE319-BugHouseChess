@@ -1,5 +1,7 @@
+import {PlayerNum} from "./game";
+
 export interface PossibleMovement {
-    boardNum: 1 | 2,
+    playerNum: PlayerNum,
     fromRow: number,
     fromCol: number,
     toRow: number,
