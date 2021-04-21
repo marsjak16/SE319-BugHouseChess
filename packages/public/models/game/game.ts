@@ -22,6 +22,16 @@ export interface Game {
     playerUsernames: string[]
 
     /**
+     * Whose turn it is in the first game
+     */
+    game1Turn: 1 | 2;
+
+    /**
+     * Whose turn it is in the second game
+     */
+    game2Turn: 3 | 4;
+
+    /**
      * Game between players 1 and 2
      */
     board1: PieceType[][],

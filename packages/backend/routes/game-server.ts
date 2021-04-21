@@ -2,7 +2,7 @@ import {Namespace} from "socket.io";
 import {AuthenticationResult} from "../../public/models/account/authentication-result";
 import {Game} from "../../public/models/game/game";
 import {GameConfig, setupGame} from "../../public/game/setup-game";
-import {DescribePossibleMovement} from "../../public/models/game/describe-possible-movement";
+import {PossibleMovement} from "../../public/models/game/possible-movement";
 import {movement} from "../../public/game/movement";
 import {PieceMoveRequest} from "../../public/models/game/piece-move-request";
 

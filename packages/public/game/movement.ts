@@ -1,9 +1,9 @@
 import {PieceMoveRequest} from "../models/game/piece-move-request";
-import {DescribePossibleMovement} from "../models/game/describe-possible-movement";
+import {PossibleMovement} from "../models/game/possible-movement";
 import {Game} from "../models/game/game";
 import {isSamePlayer, PieceType} from "../models/game/piece";
 
-export function movement(moveRequest: PieceMoveRequest, game: Game): DescribePossibleMovement[] {
+export function movement(moveRequest: PieceMoveRequest, game: Game): PossibleMovement[] {
     const board = (moveRequest.boardNum == 1) ? game.board1 : game.board2.reverse();
     const piece = board[moveRequest.row][moveRequest.col];
     const pieceRow = moveRequest.row;
@@ -21,7 +21,7 @@ export function movement(moveRequest: PieceMoveRequest, game: Game): DescribePos
         return isOnBoard(row, col) && board[col][row] == PieceType.EMPTY;;
     };
 
-    const movements: DescribePossibleMovement[] = [];
+    const movements: PossibleMovement[] = [];
 
     const pushIfFree = (row: number, col: number) => {
         if (isOpen(row, col)) {

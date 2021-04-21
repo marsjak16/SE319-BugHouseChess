@@ -50,6 +50,8 @@ export function setupGame(config: GameConfig): Game {
         clockStart: new Date().toISOString(),
         clockDuration: config.clockDuration,
         playerUsernames: randomizeUsers(config.playerUsernames),
+        game1Turn: 1,
+        game2Turn: 3,
         board1: setupBoard(),
         board2: setupBoard(true),
         player1Pieces: [],
