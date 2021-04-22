@@ -1,12 +1,12 @@
-import {Game, PlayerNum} from "../models/game/game";
+import {Game, getBoard, getOpponent, PlayerNum} from "../models/game/game";
 import {PieceType} from "../models/game/piece";
 import {findAllMovements, makeMove} from "./movement";
 
 export function isCheck(game: Game, player: PlayerNum): boolean {
-    const board = (player < 2) ? game.board1 : game.board2;
+    const board = getBoard(game, player);
     const kingPosition = findKing(board, player);
 
-    const movements = findAllMovements(game, (player < 2) ? 2 : 1);
+    const movements = findAllMovements(game, getOpponent(player));
     for (let movement of movements) {
         if (movement.toRow == kingPosition.row && movement.toCol == kingPosition.col) {
             return true;
@@ -21,11 +21,11 @@ export function isCheckmate(game: Game, player: PlayerNum): boolean {
         return false;
     }
 
-    const movements = findAllMovements(game, (player < 2) ? 1 : 2);
+    const movements = findAllMovements(game, player);
 
     for (let movement of movements) {
         const resultGame = makeMove(game, movement);
-        if (!isCheck(game, player)) {
+        if (!isCheck(resultGame, player)) {
             return false;
         }
     }
@@ -34,7 +34,7 @@ export function isCheckmate(game: Game, player: PlayerNum): boolean {
 }
 
 export function findKing(board: PieceType[][], player: PlayerNum): {col: number, row: number} {
-    const kingType = (player % 2 == 0) ? PieceType.WHITE_KING : PieceType.BLACK_KING;
+    const kingType = (player == 1 || player == 3) ? PieceType.WHITE_KING : PieceType.BLACK_KING;
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {

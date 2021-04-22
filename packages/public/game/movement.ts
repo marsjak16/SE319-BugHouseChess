@@ -8,10 +8,10 @@ import {PlacementRequest} from "../models/game/placement-request";
 
 export function makeMove(game: Game, movement: PossibleMovement): Game {
     const gameCopy = _.cloneDeep(game);
-    const board = (movement.playerNum < 2) ? gameCopy.board1 : gameCopy.board2;
+    const board = getBoard(gameCopy, movement.playerNum);
 
     if (board[movement.toRow][movement.toCol] != PieceType.EMPTY) {
-        const pieces = getPieces(this.game, getAlly(this.game, movement.playerNum));
+        const pieces = getPieces(gameCopy, getAlly(this.game, movement.playerNum));
         pieces.push(board[movement.toRow][movement.toCol]);
     }
 
@@ -25,9 +25,11 @@ export function makeMove(game: Game, movement: PossibleMovement): Game {
 
 export function placePiece(game: Game, place: PlacePiece): Game {
     const gameCopy = _.cloneDeep(game);
-    const board = (place.playerNum < 2) ? gameCopy.board1 : gameCopy.board2;
+    const board = getBoard(gameCopy, place.playerNum);
+    const pieces = getPieces(gameCopy, place.playerNum);
 
     board[place.row][place.col] = place.piece;
+    pieces.splice(pieces.indexOf(place.piece), 1);
 
     switchTurns(gameCopy, place.playerNum);
 
@@ -106,7 +108,7 @@ export function findAllMovements(game: Game, player: PlayerNum): PossibleMovemen
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            if (isPlayersPiece(player, board[row][col])) {
+            if (    isPlayersPiece(player, board[row][col])) {
                 findMovements(game, {
                     col: col,
                     row: row,
@@ -247,7 +249,7 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
 
     if (piece == PieceType.WHITE_BISHOP || piece == PieceType.BLACK_BISHOP || piece == PieceType.WHITE_QUEEN || piece == PieceType.BLACK_QUEEN) {
         console.log('bishop');
-        for (let row = pieceRow, col = pieceCol; row < 8 && col < 8; row++, col++) {
+        for (let row = pieceRow + 1, col = pieceCol + 1; row < 8 && col < 8; row++, col++) {
             pushIfFreeOrCanTake(row, col);
 
             if (isOccupied(row, col)) {
@@ -255,7 +257,7 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
             }
         }
 
-        for (let row = pieceRow, col = pieceCol; row >= 0 && col < 8; row--, col++) {
+        for (let row = pieceRow - 1, col = pieceCol + 1; row >= 0 && col < 8; row--, col++) {
             pushIfFreeOrCanTake(row, col);
 
             if (isOccupied(row, col)) {
@@ -263,7 +265,7 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
             }
         }
 
-        for (let row = pieceRow, col = pieceCol; row >= 0 && col >= 0; row--, col--) {
+        for (let row = pieceRow - 1, col = pieceCol - 1; row >= 0 && col >= 0; row--, col--) {
             pushIfFreeOrCanTake(row, col);
 
             if (isOccupied(row, col)) {
@@ -271,7 +273,7 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
             }
         }
 
-        for (let row = pieceRow, col = pieceCol; row < 8 && col >= 0; row++, col--) {
+        for (let row = pieceRow + 1, col = pieceCol - 1; row < 8 && col >= 0; row++, col--) {
             pushIfFreeOrCanTake(row, col);
 
             if (isOccupied(row, col)) {

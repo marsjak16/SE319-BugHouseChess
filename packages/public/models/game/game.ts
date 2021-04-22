@@ -71,7 +71,7 @@ export interface Game {
 }
 
 export function getPlayerNum(game: Game, username: string): PlayerNum {
-    return game.playerUsernames.indexOf(username) as PlayerNum;
+    return game.playerUsernames.indexOf(username) + 1 as PlayerNum;
 }
 
 export function getBoardNum(player: PlayerNum): BoardNum {
@@ -83,7 +83,7 @@ export function getBoard(game: Game, player: PlayerNum): PieceType[][] {
 }
 
 export function isPlayersPiece(player: PlayerNum, piece: PieceType) {
-    const playerIsWhite = player == 1 || player == 4;
+    const playerIsWhite = player == 1 || player == 3;
     return playerIsWhite == isWhite(piece);
 }
 
@@ -96,7 +96,7 @@ export function getPieces(game: Game, player: PlayerNum): PieceType[] {
     }
 }
 
-export function getOpponent(game: Game, player: PlayerNum): PlayerNum {
+export function getOpponent(player: PlayerNum): PlayerNum {
     switch (player) {
         case 1: return 2;
         case 2: return 1;
@@ -107,9 +107,9 @@ export function getOpponent(game: Game, player: PlayerNum): PlayerNum {
 
 export function getAlly(game: Game, player: PlayerNum): PlayerNum {
     switch (player) {
-        case 1: return 3;
-        case 2: return 4;
-        case 3: return 1;
-        case 4: return 2;
+        case 1: return 4;
+        case 2: return 3;
+        case 3: return 2;
+        case 4: return 1;
     }
 }

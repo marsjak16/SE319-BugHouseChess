@@ -130,7 +130,7 @@ export class GameServer {
                 io.emit('game', this.game);
 
                 // Check if the player is in check
-                const opponent = getOpponent(this.game, placement.playerNum);
+                const opponent = getOpponent(placement.playerNum);
                 if (isCheck(this.game, opponent)) {
                     // Is it a checkmate?
                     if (isCheckmate(this.game, opponent)) {
@@ -215,7 +215,7 @@ export class GameServer {
                 io.emit('game', this.game);
 
                 // Check if the player is in check
-                const opponent = getOpponent(this.game, movement.playerNum);
+                const opponent = getOpponent(movement.playerNum);
                 if (isCheck(this.game, opponent)) {
                     // Is it a checkmate?
                     if (isCheckmate(this.game, opponent)) {

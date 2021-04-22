@@ -5,20 +5,17 @@ import {Config} from "../config/config";
 import {AuthenticationResult} from "../../../public/models/account/authentication-result";
 import * as H from "history";
 import {BoardNum, Game, getBoardNum} from "../../../public/models/game/game";
-import {King} from "./library/pieces/King";
-import {Queen} from "./library/pieces/Queen";
-import {Bishop} from "./library/pieces/Bishop";
-import {Knight} from "./library/pieces/Knight";
-import {Rook} from "./library/pieces/Rook";
-import {Pawn} from "./library/pieces/Pawn";
 import {UserModel} from "../../../public/models/account/user-model";
-import {Square, SquareColor} from "./library/square";
-import {PieceType} from "../../../public/models/game/piece";
+import {renderPiece, Square, SquareColor} from "./library/square";
 import {PieceMoveRequest} from "../../../public/models/game/piece-move-request";
 import {PossibleMovement} from "../../../public/models/game/possible-movement";
 import _ from "lodash";
 import {MoveError} from "../../../public/models/game/move-error";
 import {PlacementError} from "../../../public/models/game/placement-error";
+import {Scorecard} from "./scorecard";
+import {PlacePiece} from "../../../public/models/game/place-piece";
+import {isWhite, PieceType} from "../../../public/models/game/piece";
+import {PlacementRequest} from "../../../public/models/game/placement-request";
 
 const chessTable: CSSProperties = {
     backgroundColor: 'lightgrey',
@@ -29,11 +26,6 @@ const chessDiv: CSSProperties = {
     float: 'left',
     width: '50%',
     padding: '10px'
-};
-
-const timerDiv: CSSProperties = {
-    float: 'right',
-    width: '20%',
 };
 
 export interface GamePageParams {
@@ -49,6 +41,7 @@ export interface GamePageProps {
 export interface GamePageState {
     game?: Game,
     moves?: PossibleMovement[]
+    placements?: PlacePiece[]
 }
 
 export class GamePage extends Component<GamePageProps, GamePageState> {
@@ -84,6 +77,12 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
             this.setState(newState);
         });
 
+        this.socket.on('placementOptions', (options: PlacePiece[]) => {
+            const newState: GamePageState = _.cloneDeep(this.state);
+            newState.placements = options;
+            this.setState(newState);
+        });
+
         this.socket.on('moveError', (error: MoveError) => {
             console.log(error.message);
         });
@@ -102,100 +101,82 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
             <div>
                 <div style={chessDiv}>
                     <div style={{float: 'right'}}>
-                        <div style={{paddingBottom: '10px'}}>
-                            <table id="enemySection1" style={{}}>
-                                <tr>
-                                    <td>
-                                        <h5 style={{textAlign: 'left'}}>Enemy 1</h5>
-                                    </td>
-                                    <td>
-                                        <div style={timerDiv}><h5>5:00</h5></div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td style={{backgroundColor: 'lightgrey'}} colSpan={2}>
-                                        <div style={{width: '505px', height: '70px'}}>
-                                            <img style={{padding: '10px'}} src="/TempChessPieces/bp.png"></img>
-                                            <img style={{padding: '10px'}} src="/TempChessPieces/br.png"></img>
-                                            <img style={{padding: '10px'}} src="/TempChessPieces/bn.png"></img>
-                                            <img style={{padding: '10px'}} src="/TempChessPieces/bb.png"></img>
-                                            <img style={{padding: '10px'}} src="/TempChessPieces/bq.png"></img>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
+                        <Scorecard username={this.state.game?.playerUsernames?.[0]}
+                                   pieces={this.state.game?.player1Pieces}
+                                   isTurn={this.state.game?.game1Turn == 1}
+                                   onClick={p => this.onPieceClick(p, 1)}
+                                    />
                         {this.makeBoard1()}
+                        <Scorecard username={this.state.game?.playerUsernames?.[1]}
+                                   pieces={this.state.game?.player2Pieces}
+                                   isTurn={this.state.game?.game1Turn == 2}
+                                   onClick={p => this.onPieceClick(p, 1)}/>
                     </div>
                 </div>
                 <div style={chessDiv}>
-                    <div style={{paddingBottom: '10px'}}>
-                        <table id="enemySection2" style={{}}>
-                            <tr>
-                                <td>
-                                    <h5 style={{textAlign: 'left'}}>Enemy 2</h5>
-                                </td>
-                                <td>
-                                    <div style={timerDiv}><h5>5:00</h5></div>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{backgroundColor: 'lightgrey'}} colSpan={2}>
-                                    <div style={{width: '505px', height: '70px'}}>
-                                        <img style={{padding: '10px'}} src="/TempChessPieces/wp.png"></img>
-                                        <img style={{padding: '10px'}} src="/TempChessPieces/wr.png"></img>
-                                        <img style={{padding: '10px'}} src="/TempChessPieces/wn.png"></img>
-                                        <img style={{padding: '10px'}} src="/TempChessPieces/wb.png"></img>
-                                        <img style={{padding: '10px'}} src="/TempChessPieces/wq.png"></img>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
+                    <Scorecard username={this.state.game?.playerUsernames?.[3]}
+                               pieces={this.state.game?.player4Pieces}
+                               isTurn={this.state.game?.game2Turn == 4}
+                               onClick={p => this.onPieceClick(p, 2)}/>
                     {this.makeBoard2()}
+                    <Scorecard username={this.state.game?.playerUsernames?.[2]}
+                               pieces={this.state.game?.player3Pieces}
+                               isTurn={this.state.game?.game2Turn == 3}
+                               onClick={p => this.onPieceClick(p, 2)}/>
                 </div>
             </div>);
     }
 
     private highlighted(row: number, col: number, board: number): boolean {
-        return !!(this.state.moves?.find(p => {
-            return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == board;
-        }));
+        if (this.state.moves) {
+            return !!(this.state.moves.find(p => {
+                return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == board;
+            }));
+        } else if (this.state.placements) {
+            return !!(this.state.placements.find(p => {
+                return p.row == row && p.col == col && getBoardNum(p.playerNum) == board
+            }));
+        }
+
+        return false;
+    }
+
+    private onPieceClick(piece: PieceType, boardNum: BoardNum) {
+        const placementRequest: PlacementRequest = {
+            piece,
+            playerNum: (boardNum == 1) ? (isWhite(piece) ? 1 : 2) : (isWhite(piece) ? 3 : 4)
+        };
+        this.socket.emit('placementRequest', placementRequest);
+
+        const newState: GamePageState = _.cloneDeep(this.state);
+        newState.moves = undefined;
+        newState.placements = undefined;
+        this.setState(newState);
     }
 
     private onSquareClick(row: number, col: number, boardNum: BoardNum): void {
-        const move = this.state.moves?.find(p => {
-            return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == boardNum;
+        const placement = this.state.placements?.find(p => {
+            return p.row == row && p.col == col && getBoardNum(p.playerNum) == boardNum;
         });
-        if (move) {
-            console.log(move);
-            this.socket.emit('makeMove', move);
+        if (placement) {
+            this.socket.emit('makePlacement', placement);
         } else {
-            const movementRequest: PieceMoveRequest = {row, col, boardNum};
-            this.socket.emit('movementRequest', movementRequest);
+            const move = this.state.moves?.find(p => {
+                return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == boardNum;
+            });
+            if (move) {
+                console.log(move);
+                this.socket.emit('makeMove', move);
+            } else {
+                const movementRequest: PieceMoveRequest = {row, col, boardNum};
+                this.socket.emit('movementRequest', movementRequest);
+            }
         }
 
         const newState: GamePageState = _.cloneDeep(this.state);
         newState.moves = undefined;
+        newState.placements = undefined;
         this.setState(newState);
-    }
-
-    private static renderPiece(type: PieceType | undefined): ReactElement | null {
-        switch (type) {
-            case PieceType.WHITE_PAWN: return <Pawn player={1}/>;
-            case PieceType.WHITE_ROOK: return <Rook player={1}/>;
-            case PieceType.WHITE_KNIGHT: return <Knight player={1}/>;
-            case PieceType.WHITE_BISHOP: return <Bishop player={1}/>;
-            case PieceType.WHITE_QUEEN: return <Queen player={1}/>;
-            case PieceType.WHITE_KING: return <King player={1}/>;
-            case PieceType.BLACK_PAWN: return <Pawn player={0}/>;
-            case PieceType.BLACK_ROOK: return <Rook player={0}/>;
-            case PieceType.BLACK_KNIGHT: return <Knight player={0}/>;
-            case PieceType.BLACK_BISHOP: return <Bishop player={0}/>;
-            case PieceType.BLACK_QUEEN: return <Queen player={0}/>;
-            case PieceType.BLACK_KING: return <King player={0}/>;
-            default: return null;
-        }
     }
 
     private static makeFileHeadings(): ReactElement {
@@ -207,7 +188,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
             col => <Square highlighted={this.highlighted(row, col, 2)}
                               color={col % 2 == row % 2 ? SquareColor.WHITE : SquareColor.BLACK}
                               onClick={() => this.onSquareClick(row, col, 2)}>
-                {GamePage.renderPiece(this.state.game?.board2[row][col])}</Square>)}
+                {renderPiece(this.state.game?.board2[row][col])}</Square>)}
         </tr>
     }
 
@@ -223,7 +204,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
             col => <Square highlighted={this.highlighted(7 - row, col, 1)}
                            color={col % 2 == row % 2 ? SquareColor.BLACK: SquareColor.WHITE}
                            onClick={() => this.onSquareClick(7 - row, col, 1)}>
-                {GamePage.renderPiece(this.state.game?.board1[7 - row][col])}</Square>)}
+                {renderPiece(this.state.game?.board1[7 - row][col])}</Square>)}
         </tr>
     }
 
