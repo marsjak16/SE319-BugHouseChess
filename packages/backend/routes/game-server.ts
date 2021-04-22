@@ -3,14 +3,15 @@ import {AuthenticationResult} from "../../public/models/account/authentication-r
 import {Game, getBoard, getBoardNum, getOpponent, getPieces, getPlayerNum} from "../../public/models/game/game";
 import {GameConfig, setupGame} from "../../public/game/setup-game";
 import {PossibleMovement} from "../../public/models/game/possible-movement";
-import {findMovements, findPlacements, makeMove, placePiece} from "../../public/game/movement";
-import {PieceMoveRequest} from "../../public/models/game/piece-move-request";
-import {MoveError} from "../../public/models/game/move-error";
 import {isCheck, isCheckmate} from "../../public/game/victory";
 import {CheckStatus, CheckType} from "../../public/models/game/check-status";
-import {PlacementRequest} from "../../public/models/game/placement-request";
 import {PlacePiece} from "../../public/models/game/place-piece";
+import { PieceMoveRequest } from "../../public/models/game/piece-move-request";
+import {findMovements, findPlacements, makeMove, placePiece} from "../../public/game/movement";
+import {PlacementRequest} from "../../public/models/game/placement-request";
 import {PlacementError} from "../../public/models/game/placement-error";
+import {MoveError} from "../../public/models/game/move-error";
+import _ from "lodash";
 
 export class GameServer {
     game: Game;
@@ -96,7 +97,7 @@ export class GameServer {
                     playerNum: placement.playerNum,
                     piece: placement.piece
                 });
-                if (!validPlacements.includes(placement)) {
+                if (!validPlacements.find(p => _.isEqual(p, placement))) {
                     socket.emit('placementError', <PlacementError>{
                         message: "This piece cannot be placed there"
                     });
@@ -178,10 +179,10 @@ export class GameServer {
                 const validMovements = findMovements(this.game, {
                     row: movement.fromRow,
                     col: movement.fromCol,
-                    boardNum: getBoardNum(this.game, movement.playerNum)
+                    boardNum: getBoardNum(movement.playerNum)
                 });
 
-                if (!validMovements.includes(movement)) {
+                if (!validMovements.find(m => _.isEqual(m, movement))) {
                     socket.emit('moveError', <MoveError>{
                         message: 'Not a valid movement'
                     });

@@ -74,12 +74,12 @@ export function getPlayerNum(game: Game, username: string): PlayerNum {
     return game.playerUsernames.indexOf(username) as PlayerNum;
 }
 
-export function getBoardNum(game: Game, player: PlayerNum): BoardNum {
-    return (player < 2) ? 1 : 2;
+export function getBoardNum(player: PlayerNum): BoardNum {
+    return (player < 3) ? 1 : 2;
 }
 
 export function getBoard(game: Game, player: PlayerNum): PieceType[][] {
-    return (player < 2) ? game.board1 : game.board2;
+    return (player < 3) ? game.board1 : game.board2;
 }
 
 export function isPlayersPiece(player: PlayerNum, piece: PieceType) {

@@ -4,8 +4,7 @@ import {match} from "react-router-dom";
 import {Config} from "../config/config";
 import {AuthenticationResult} from "../../../public/models/account/authentication-result";
 import * as H from "history";
-import {Game} from "../../../public/models/game/Game";
-import {PieceType} from "../../../public/models/game/Piece";
+import {BoardNum, Game, getBoardNum} from "../../../public/models/game/game";
 import {King} from "./library/pieces/King";
 import {Queen} from "./library/pieces/Queen";
 import {Bishop} from "./library/pieces/Bishop";
@@ -13,17 +12,14 @@ import {Knight} from "./library/pieces/Knight";
 import {Rook} from "./library/pieces/Rook";
 import {Pawn} from "./library/pieces/Pawn";
 import {UserModel} from "../../../public/models/account/user-model";
+import {Square, SquareColor} from "./library/square";
+import {PieceType} from "../../../public/models/game/piece";
+import {PieceMoveRequest} from "../../../public/models/game/piece-move-request";
+import {PossibleMovement} from "../../../public/models/game/possible-movement";
+import _ from "lodash";
+import {MoveError} from "../../../public/models/game/move-error";
+import {PlacementError} from "../../../public/models/game/placement-error";
 
-const blackSquare: CSSProperties = {
-    width: "60px",
-    height: "60px",
-    backgroundColor: 'BurlyWood'
-}
-const whiteSquare: CSSProperties = {
-    width: "60px",
-    height: "60px",
-    backgroundColor: 'AntiqueWhite'
-}
 const chessTable: CSSProperties = {
     backgroundColor: 'lightgrey',
     border: 'solid 10px lightgrey'
@@ -34,10 +30,11 @@ const chessDiv: CSSProperties = {
     width: '50%',
     padding: '10px'
 };
+
 const timerDiv: CSSProperties = {
     float: 'right',
     width: '20%',
-}
+};
 
 export interface GamePageParams {
     gameId: string
@@ -50,7 +47,8 @@ export interface GamePageProps {
 }
 
 export interface GamePageState {
-    game?: Game
+    game?: Game,
+    moves?: PossibleMovement[]
 }
 
 export class GamePage extends Component<GamePageProps, GamePageState> {
@@ -75,40 +73,28 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
         });
 
         this.socket.on('game', (game: Game) => {
-            this.setState({
-                game: game
-            });
+            const newState: GamePageState = _.cloneDeep(this.state);
+            newState.game = game;
+            this.setState(newState);
+        });
+
+        this.socket.on('movementOptions', (options: PossibleMovement[]) => {
+            const newState: GamePageState = _.cloneDeep(this.state);
+            newState.moves = options;
+            this.setState(newState);
+        });
+
+        this.socket.on('moveError', (error: MoveError) => {
+            console.log(error.message);
+        });
+
+        this.socket.on('placementError', (error: PlacementError) => {
+            console.log(error.message);
         });
     }
 
     componentWillUnmount(): void {
         this.socket.close();
-    }
-
-    pieceClick(x: number, y: number, b: number): void {
-
-        let piece = b === 1 ? this.state.game?.board1[x][y] : this.state.game?.board2[x][y]
-
-        console.log(piece)
-
-    }
-
-    private static renderPiece(type: PieceType | undefined): ReactElement | null {
-        switch (type) {
-            case PieceType.WHITE_PAWN: return <Pawn player={1}/>;
-            case PieceType.WHITE_ROOK: return <Rook player={1}/>;
-            case PieceType.WHITE_KNIGHT: return <Knight player={1}/>;
-            case PieceType.WHITE_BISHOP: return <Bishop player={1}/>;
-            case PieceType.WHITE_QUEEN: return <Queen player={1}/>;
-            case PieceType.WHITE_KING: return <King player={1}/>;
-            case PieceType.BLACK_PAWN: return <Pawn player={0}/>;
-            case PieceType.BLACK_ROOK: return <Rook player={0}/>;
-            case PieceType.BLACK_KNIGHT: return <Knight player={0}/>;
-            case PieceType.BLACK_BISHOP: return <Bishop player={0}/>;
-            case PieceType.BLACK_QUEEN: return <Queen player={0}/>;
-            case PieceType.BLACK_KING: return <King player={0}/>;
-            default: return null;
-        }
     }
 
     render() {
@@ -171,46 +157,80 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
             </div>);
     }
 
-    makeBoard2FileHeadings(): ReactElement {
-        return <tr><th></th>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <th>{fileName}</th>)}</tr>;
+    private highlighted(row: number, col: number, board: number): boolean {
+        return !!(this.state.moves?.find(p => {
+            return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == board;
+        }));
     }
 
-    makeBoard2Row(row: number): ReactElement {
-        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0,1,2,3,4,5,6,7].map(
-            rowNum => <td style={rowNum%2==row%2 ? whiteSquare: blackSquare}>
-                {GamePage.renderPiece(this.state.game?.board1[8-row][rowNum])}</td>)}
+    private onSquareClick(row: number, col: number, boardNum: BoardNum): void {
+        const move = this.state.moves?.find(p => {
+            return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == boardNum;
+        });
+        if (move) {
+            console.log(move);
+            this.socket.emit('makeMove', move);
+        } else {
+            const movementRequest: PieceMoveRequest = {row, col, boardNum};
+            this.socket.emit('movementRequest', movementRequest);
+        }
+
+        const newState: GamePageState = _.cloneDeep(this.state);
+        newState.moves = undefined;
+        this.setState(newState);
+    }
+
+    private static renderPiece(type: PieceType | undefined): ReactElement | null {
+        switch (type) {
+            case PieceType.WHITE_PAWN: return <Pawn player={1}/>;
+            case PieceType.WHITE_ROOK: return <Rook player={1}/>;
+            case PieceType.WHITE_KNIGHT: return <Knight player={1}/>;
+            case PieceType.WHITE_BISHOP: return <Bishop player={1}/>;
+            case PieceType.WHITE_QUEEN: return <Queen player={1}/>;
+            case PieceType.WHITE_KING: return <King player={1}/>;
+            case PieceType.BLACK_PAWN: return <Pawn player={0}/>;
+            case PieceType.BLACK_ROOK: return <Rook player={0}/>;
+            case PieceType.BLACK_KNIGHT: return <Knight player={0}/>;
+            case PieceType.BLACK_BISHOP: return <Bishop player={0}/>;
+            case PieceType.BLACK_QUEEN: return <Queen player={0}/>;
+            case PieceType.BLACK_KING: return <King player={0}/>;
+            default: return null;
+        }
+    }
+
+    private static makeFileHeadings(): ReactElement {
+        return <tr><th/>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <th>{fileName}</th>)}</tr>;
+    }
+
+    private makeBoard2Row(row: number): ReactElement {
+        return <tr id={"r" + (9 - row)}><th>{9 - row}</th>{[0, 1, 2, 3, 4, 5, 6, 7].map(
+            col => <Square highlighted={this.highlighted(row, col, 2)}
+                              color={col % 2 == row % 2 ? SquareColor.WHITE : SquareColor.BLACK}
+                              onClick={() => this.onSquareClick(row, col, 2)}>
+                {GamePage.renderPiece(this.state.game?.board2[row][col])}</Square>)}
         </tr>
     }
 
-    makeBoardRow(row: number, board:number): ReactElement {
-        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0,1,2,3,4,5,6,7].map(
-            rowNum => <td style={rowNum%2==row%2 ? whiteSquare: blackSquare}>
-                {GamePage.renderPiece(this.state.game?.board1[8-row][rowNum])}</td>)}
-        </tr>
-    }
-
-    makeBoard2(): ReactElement{
+    private makeBoard2(): ReactElement{
         return <table id="board2" style={chessTable}>
-            {this.makeBoard2FileHeadings()}
-            {[8,7,6,5,4,3,2,1].reverse().map(row => this.makeBoard2Row(row))}
+            {GamePage.makeFileHeadings()}
+            {[7, 6, 5, 4, 3, 2, 1, 0].reverse().map(row => this.makeBoard2Row(row))}
         </table>
     }
 
-    makeBoard1FileHeadings(): ReactElement {
-        return <tr><th></th>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].reverse().map(fileName => <th>{fileName}</th>)}</tr>;
-	}
-
-    makeBoard1Row(row: number): ReactElement {
-        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0,1,2,3,4,5,6,7].map(
-            rowNum => <td style={rowNum%2==row%2 ? blackSquare: whiteSquare}>
-                {GamePage.renderPiece(this.state.game?.board1[8-row][rowNum])}</td>)}
+    private makeBoard1Row(row: number): ReactElement {
+        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0, 1, 2, 3, 4, 5, 6, 7].map(
+            col => <Square highlighted={this.highlighted(7 - row, col, 1)}
+                           color={col % 2 == row % 2 ? SquareColor.BLACK: SquareColor.WHITE}
+                           onClick={() => this.onSquareClick(7 - row, col, 1)}>
+                {GamePage.renderPiece(this.state.game?.board1[7 - row][col])}</Square>)}
         </tr>
     }
 
-    makeBoard1(): ReactElement{
+    private makeBoard1(): ReactElement{
         return <table id="board1" style={chessTable}>
-            {this.makeBoard1FileHeadings()}
-            {[8,7,6,5,4,3,2,1].map(row => this.makeBoard1Row(row))}
+            {GamePage.makeFileHeadings()}
+            {[7, 6, 5, 4, 3, 2, 1, 0].map(row => this.makeBoard1Row(row))}
         </table>
     }
 }
