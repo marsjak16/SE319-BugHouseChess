@@ -15,7 +15,6 @@ export interface GameOverProps {
 
 export class GameOver extends Component<GameOverProps> {
     render(): ReactElement {
-        console.log('WIN!');
         return <div className='modal fade show' style={GameOverModalStyle}>
             <div className='modal-dialog'>
                 <div className='modal-content'>

@@ -89,7 +89,6 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     }
 
     render() {
-        console.log(this.state.game?.winningTeam);
         return (
             <div>
                 <div>
@@ -161,7 +160,6 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                 return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == boardNum;
             });
             if (move) {
-                console.log(move);
                 this.socket.emit('makeMove', move);
             } else {
                 const movementRequest: PieceMoveRequest = {row, col, boardNum};
