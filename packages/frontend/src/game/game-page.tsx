@@ -95,32 +95,19 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 
     private static renderPiece(type: PieceType | undefined): ReactElement | null {
         switch (type) {
-            case PieceType.WHITE_PAWN:
-                return <Pawn player={1}/>;
-            case PieceType.WHITE_ROOK:
-                return <Rook player={1}/>;
-            case PieceType.WHITE_KNIGHT:
-                return <Knight player={1}/>;
-            case PieceType.WHITE_BISHOP:
-                return <Bishop player={1}/>;
-            case PieceType.WHITE_QUEEN:
-                return <Queen player={1}/>;
-            case PieceType.WHITE_KING:
-                return <King player={1}/>;
-            case PieceType.BLACK_PAWN:
-                return <Pawn player={0}/>;
-            case PieceType.BLACK_ROOK:
-                return <Rook player={0}/>;
-            case PieceType.BLACK_KNIGHT:
-                return <Knight player={0}/>;
-            case PieceType.BLACK_BISHOP:
-                return <Bishop player={0}/>;
-            case PieceType.BLACK_QUEEN:
-                return <Queen player={0}/>;
-            case PieceType.BLACK_KING:
-                return <King player={0}/>;
-            default:
-                return null;
+            case PieceType.WHITE_PAWN: return <Pawn player={1}/>;
+            case PieceType.WHITE_ROOK: return <Rook player={1}/>;
+            case PieceType.WHITE_KNIGHT: return <Knight player={1}/>;
+            case PieceType.WHITE_BISHOP: return <Bishop player={1}/>;
+            case PieceType.WHITE_QUEEN: return <Queen player={1}/>;
+            case PieceType.WHITE_KING: return <King player={1}/>;
+            case PieceType.BLACK_PAWN: return <Pawn player={0}/>;
+            case PieceType.BLACK_ROOK: return <Rook player={0}/>;
+            case PieceType.BLACK_KNIGHT: return <Knight player={0}/>;
+            case PieceType.BLACK_BISHOP: return <Bishop player={0}/>;
+            case PieceType.BLACK_QUEEN: return <Queen player={0}/>;
+            case PieceType.BLACK_KING: return <King player={0}/>;
+            default: return null;
         }
     }
 
@@ -154,7 +141,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                         </div>
 
                         <table id="board1" style={chessTable}>
-							{makeFileHeadings()}
+							{/*{this.makeFileHeadings()}*/}
 							<tr>
                                 <th></th>
                                 <th>A</th>
@@ -470,4 +457,10 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     makeFileHeadings(): ReactElement {
         return <tr>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <td>{fileName}</td>)}</tr>;
 	}
+
+	makeBoardRow(row: number): ReactElement {
+        return <tr id={"r" + row}></tr>
+    }
+
+
 }
