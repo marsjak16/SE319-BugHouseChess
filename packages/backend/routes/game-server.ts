@@ -138,6 +138,9 @@ export class GameServer {
                             player: opponent,
                             type: CheckType.CHECKMATE
                         });
+
+                        this.game.winningTeam = getBoardNum(placement.playerNum);
+                        io.emit('game', this.game);
                     } else {
                         io.emit('check', <CheckStatus>{
                             player: opponent,
@@ -223,6 +226,9 @@ export class GameServer {
                             player: opponent,
                             type: CheckType.CHECKMATE
                         });
+
+                        this.game.winningTeam = getBoardNum(movement.playerNum);
+                        io.emit('game', this.game);
                     } else {
                         io.emit('check', <CheckStatus>{
                             player: opponent,
