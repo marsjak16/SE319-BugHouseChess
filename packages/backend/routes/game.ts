@@ -7,6 +7,7 @@ import {QueueStatus} from "../../public/models/game/queue-status";
 import {JoinGame} from "../../public/models/game/join-game";
 import {setupNamespaceMiddleware} from "../util/session";
 import _ from "lodash";
+import {GameConfig} from "../../public/game/setup-game";
 
 interface QueuedPlayer {
     username: string,
@@ -32,19 +33,29 @@ export function gameRouter(server: http.Server): Router {
     const joinGameIo = io.of('/join-game');
     setupNamespaceMiddleware(joinGameIo);
 
-    // Start a test game
-    new GameServer({
-        playerUsernames: ['test1', 'test2', 'test3', 'test4'],
-        clockDuration: 180000,
-        gameId: '1'
-    }, io);
-
     const updateStatus = () => {
         playerQueue.forEach(q => q.socket.emit('queue-status', <QueueStatus>{
             inQueue: playerQueue.includes(q),
             numInQueue: playerQueue.length
         }));
     };
+
+    const createGame = (config: GameConfig): GameServer => {
+        const namespace = io.of(`/game/${config.gameId}`);
+        setupNamespaceMiddleware(namespace);
+
+        const newGame = new GameServer(config, namespace);
+        games.push(newGame);
+
+        return newGame
+    };
+
+    // Start a test game
+    createGame({
+        playerUsernames: ['test1', 'test2', 'test3', 'test4'],
+        clockDuration: 180000,
+        gameId: '1'
+    });
 
     joinGameIo.on('connection', socket => {
         // @ts-ignore
@@ -76,13 +87,11 @@ export function gameRouter(server: http.Server): Router {
             updateStatus();
 
             if (playerQueue.length == 4) {
-                const newGame = new GameServer({
+                const newGame = createGame({
                     gameId: gameCount.toString(),
                     clockDuration: 300000,
                     playerUsernames: playerQueue.map(q => q.username)
-                }, io);
-
-                games.push(newGame);
+                });
 
                 playerQueue.forEach(q => q.socket.emit('join-game', <JoinGame>{
                     gameId: newGame.game.gameId
