@@ -1,4 +1,4 @@
-import {Game} from "../models/game/Game";
+import {Game} from "../models/game/game";
 import {GameConfig, setupGame} from "./setup-game";
 
 describe('SetupGame', () => {
