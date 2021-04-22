@@ -1,4 +1,6 @@
+import {BoardNum} from "./game";
+
 export interface PieceMoveRequest {
-    boardNum: 1 | 2,
+    boardNum: BoardNum,
     col, row: number
 }

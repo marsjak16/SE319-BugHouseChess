@@ -1,13 +1,16 @@
 import {Namespace} from "socket.io";
 import {AuthenticationResult} from "../../public/models/account/authentication-result";
-import {Game, getPlayerNum} from "../../public/models/game/game";
+import {Game, getBoard, getBoardNum, getOpponent, getPieces, getPlayerNum} from "../../public/models/game/game";
 import {GameConfig, setupGame} from "../../public/game/setup-game";
 import {PossibleMovement} from "../../public/models/game/possible-movement";
-import {findMovements, makeMove} from "../../public/game/movement";
+import {findMovements, findPlacements, makeMove, placePiece} from "../../public/game/movement";
 import {PieceMoveRequest} from "../../public/models/game/piece-move-request";
 import {MoveError} from "../../public/models/game/move-error";
 import {isCheck, isCheckmate} from "../../public/game/victory";
 import {CheckStatus, CheckType} from "../../public/models/game/check-status";
+import {PlacementRequest} from "../../public/models/game/placement-request";
+import {PlacePiece} from "../../public/models/game/place-piece";
+import {PlacementError} from "../../public/models/game/placement-error";
 
 export class GameServer {
     game: Game;
@@ -44,7 +47,103 @@ export class GameServer {
             }
 
             socket.on('movementRequest', (movementRequest: PieceMoveRequest) => {
-                socket.emit('movementOptions', findMovements(movementRequest, this.game));
+                socket.emit('movementOptions', findMovements(this.game, movementRequest));
+            });
+
+            socket.on('placementRequest', (placementRequest: PlacementRequest) => {
+               socket.emit('placementOptions', findPlacements(this.game, placementRequest));
+            });
+
+            socket.on('makePlacement', (placement: PlacePiece) => {
+                // If the game is over don't allow any moves
+                if (this.game.winningTeam) {
+                    socket.emit('placementError', <PlacementError>{
+                        message: "You cannot place pieces once the game is over"
+                    });
+
+                    return;
+                }
+
+                // Make sure that the player can move this piece
+                if (placement.playerNum != getPlayerNum(this.game, username)) {
+                    socket.emit('placementError', <PlacementError>{
+                        message: "You cannot place a piece you don't own"
+                    });
+
+                    return;
+                }
+
+                // Make sure that it's the players turn
+                if (!(this.game.game1Turn == placement.playerNum || this.game.game2Turn == placement.playerNum)) {
+                    socket.emit('placementError', <PlacementError>{
+                        message: 'It is not your turn'
+                    });
+
+                    return;
+                }
+
+                // Make sure that the player has the piece
+                if (!getPieces(this.game, placement.playerNum).includes(placement.piece)) {
+                    socket.emit('placementError', <PlacementError>{
+                        message: "You don't own that piece"
+                    });
+
+                    return;
+                }
+
+                // Make sure that it is a valid placement
+                const validPlacements = findPlacements(this.game, {
+                    playerNum: placement.playerNum,
+                    piece: placement.piece
+                });
+                if (!validPlacements.includes(placement)) {
+                    socket.emit('placementError', <PlacementError>{
+                        message: "This piece cannot be placed there"
+                    });
+
+                    return;
+                }
+
+                const resultantGame = placePiece(this.game, placement);
+
+                // Make sure that the player is not in check after this move
+                if (isCheck(resultantGame, placement.playerNum)) {
+                    // Send a different message depending on whether the player was already in check beforehand
+                    if (isCheck(this.game, placement.playerNum)) {
+                        socket.emit('placementError', <PlacementError>{
+                            message: 'You must move out of check'
+                        });
+
+                        return;
+                    } else {
+                        socket.emit('placementError', <PlacementError>{
+                            message: 'You cannot move into check'
+                        });
+
+                        return;
+                    }
+                }
+
+                // Perform the movement
+                this.game = resultantGame;
+                io.emit('game', this.game);
+
+                // Check if the player is in check
+                const opponent = getOpponent(this.game, placement.playerNum);
+                if (isCheck(this.game, opponent)) {
+                    // Is it a checkmate?
+                    if (isCheckmate(this.game, opponent)) {
+                        io.emit('check', <CheckStatus>{
+                            player: opponent,
+                            type: CheckType.CHECKMATE
+                        });
+                    } else {
+                        io.emit('check', <CheckStatus>{
+                            player: opponent,
+                            type: CheckType.CHECK
+                        });
+                    }
+                }
             });
 
             socket.on('makeMove', (movement: PossibleMovement) => {
@@ -76,11 +175,11 @@ export class GameServer {
                 }
 
                 // Make sure that the move is valid
-                const validMovements = findMovements({
+                const validMovements = findMovements(this.game, {
                     row: movement.fromRow,
                     col: movement.fromCol,
-                    boardNum: (movement.playerNum < 2) ? 1 : 2
-                }, this.game);
+                    boardNum: getBoardNum(this.game, movement.playerNum)
+                });
 
                 if (!validMovements.includes(movement)) {
                     socket.emit('moveError', <MoveError>{
@@ -115,17 +214,17 @@ export class GameServer {
                 io.emit('game', this.game);
 
                 // Check if the player is in check
-                const potentiallyCheckedPlayer = (movement.playerNum < 2) ? this.game.game1Turn : this.game.game2Turn;
-                if (isCheck(this.game, potentiallyCheckedPlayer)) {
+                const opponent = getOpponent(this.game, movement.playerNum);
+                if (isCheck(this.game, opponent)) {
                     // Is it a checkmate?
-                    if (isCheckmate(this.game, potentiallyCheckedPlayer)) {
+                    if (isCheckmate(this.game, opponent)) {
                         io.emit('check', <CheckStatus>{
-                            player: potentiallyCheckedPlayer,
+                            player: opponent,
                             type: CheckType.CHECKMATE
                         });
                     } else {
                         io.emit('check', <CheckStatus>{
-                            player: potentiallyCheckedPlayer,
+                            player: opponent,
                             type: CheckType.CHECK
                         });
                     }

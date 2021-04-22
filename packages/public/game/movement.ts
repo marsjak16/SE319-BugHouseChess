@@ -1,62 +1,125 @@
 import {PieceMoveRequest} from "../models/game/piece-move-request";
 import {PossibleMovement} from "../models/game/possible-movement";
-import {Game} from "../models/game/game";
+import {Game, getAlly, getBoard, getBoardNum, getPieces, isPlayersPiece, PlayerNum} from "../models/game/game";
 import {isSamePlayer, isWhite, PieceType} from "../models/game/piece";
 import _ from "lodash";
+import {PlacePiece} from "../models/game/place-piece";
+import {PlacementRequest} from "../models/game/placement-request";
 
 export function makeMove(game: Game, movement: PossibleMovement): Game {
     const gameCopy = _.cloneDeep(game);
     const board = (movement.playerNum < 2) ? gameCopy.board1 : gameCopy.board2;
 
     if (board[movement.toRow][movement.toCol] != PieceType.EMPTY) {
-        let pieces: PieceType[];
-
-        if (movement.playerNum == 1) {
-            pieces = gameCopy.player4Pieces;
-        } else if (movement.playerNum == 2) {
-            pieces = gameCopy.player3Pieces;
-        } else if (movement.playerNum == 3) {
-            pieces = gameCopy.player1Pieces;
-        } else {
-            pieces = gameCopy.player2Pieces;
-        }
-
+        const pieces = getPieces(this.game, getAlly(this.game, movement.playerNum));
         pieces.push(board[movement.toRow][movement.toCol]);
     }
 
     board[movement.toRow][movement.toCol] = board[movement.fromRow][movement.fromCol];
     board[movement.fromRow][movement.fromCol] = PieceType.EMPTY;
 
-    if (movement.playerNum == 1) {
-        gameCopy.game1Turn = 2;
-    } else if (movement.playerNum == 2) {
-        gameCopy.game1Turn = 1;
-    } else if (movement.playerNum == 3) {
-        gameCopy.game2Turn = 4;
-    } else {
-        gameCopy.game2Turn = 3;
-    }
+    switchTurns(gameCopy, movement.playerNum);
 
     return gameCopy;
 }
 
-export function findAllMovements(game: Game, boardNum: 1 | 2): PossibleMovement[] {
+export function placePiece(game: Game, place: PlacePiece): Game {
+    const gameCopy = _.cloneDeep(game);
+    const board = (place.playerNum < 2) ? gameCopy.board1 : gameCopy.board2;
+
+    board[place.row][place.col] = place.piece;
+
+    switchTurns(gameCopy, place.playerNum);
+
+    return gameCopy;
+}
+
+export function switchTurns(game: Game, curPlayer: PlayerNum): void {
+    if (curPlayer == 1) {
+        game.game1Turn = 2;
+    } else if (curPlayer == 2) {
+        game.game1Turn = 1;
+    } else if (curPlayer == 3) {
+        game.game2Turn = 4;
+    } else {
+        game.game2Turn = 3;
+    }
+}
+
+export function findAllPlacements(game: Game, player: PlayerNum): PlacePiece[] {
+    const placements: PlacePiece[] = [];
+
+    for (let piece of getPieces(game, player)) {
+        findPlacements(game, {
+            piece,
+            playerNum: player
+        }).forEach(p => placements.push(p));
+    }
+
+    return placements;
+}
+
+
+export function findPlacements(game: Game, placementRequest: PlacementRequest) {
+    const board = getBoard(game, placementRequest.playerNum);
+    const placements: PlacePiece[] = [];
+
+    for (let row = 0; row < 8; row++) {
+        for (let col = 0; col < 8; col ++) {
+            // A piece can only be placed on empty squares
+            if (board[row][col] != PieceType.EMPTY) {
+                continue;
+            }
+
+            // A pawn cannot be placed in a place where it would immediately be queened
+            if (placementRequest.piece == PieceType.WHITE_PAWN || placementRequest.piece == PieceType.BLACK_PAWN) {
+                if (getBoardNum(game, placementRequest.playerNum) == 1) {
+                    if (placementRequest.playerNum == 1 && row == 0) {
+                        continue;
+                    } else if (placementRequest.playerNum == 2 && row == 7) {
+                        continue;
+                    }
+                } else {
+                    if (placementRequest.playerNum == 3 && row == 7) {
+                        continue;
+                    } else if (placementRequest.playerNum == 4 && row == 0) {
+                        continue;
+                    }
+                }
+            }
+
+            placements.push({
+                playerNum: placementRequest.playerNum,
+                piece: placementRequest.piece,
+                row,
+                col
+            });
+        }
+    }
+
+    return placements;
+}
+
+export function findAllMovements(game: Game, player: PlayerNum): PossibleMovement[] {
+    const board = getBoard(game, player);
     const movements: PossibleMovement[] = [];
 
     for (let row = 0; row < 8; row++) {
         for (let col = 0; col < 8; col++) {
-            findMovements({
-                col: col,
-                row: row,
-                boardNum: boardNum
-            }, game).forEach(m => movements.push(m));
+            if (isPlayersPiece(player, board[row][col])) {
+                findMovements(game, {
+                    col: col,
+                    row: row,
+                    boardNum: getBoardNum(game, player)
+                }).forEach(m => movements.push(m));
+            }
         }
     }
 
     return  movements;
 }
 
-export function findMovements(moveRequest: PieceMoveRequest, game: Game): PossibleMovement[] {
+export function findMovements(game: Game, moveRequest: PieceMoveRequest): PossibleMovement[] {
     const board = (moveRequest.boardNum == 1) ? game.board1 : game.board2.reverse();
     const piece = board[moveRequest.row][moveRequest.col];
     const playerNum = (moveRequest.boardNum == 1) ? (isWhite(piece) ? 1 : 2) : (isWhite(piece) ? 3 : 4);
@@ -107,7 +170,7 @@ export function findMovements(moveRequest: PieceMoveRequest, game: Game): Possib
     };
 
     if (piece == PieceType.WHITE_PAWN) {
-        if (pieceRow == 1) {
+        if ((getBoardNum(game, playerNum) == 1 && pieceRow == 1) || (getBoardNum(game, playerNum) == 2) && pieceRow == 6) {
             pushIfFree(pieceRow + 2, pieceCol);
         }
 
@@ -117,7 +180,7 @@ export function findMovements(moveRequest: PieceMoveRequest, game: Game): Possib
     }
 
     if (piece == PieceType.BLACK_PAWN) {
-        if (pieceRow == 6) {
+        if ((getBoardNum(game, playerNum) == 1 && pieceRow == 6) || (getBoardNum(game, playerNum) == 2) && pieceRow == 1) {
             pushIfFree(pieceRow - 2, pieceCol);
         }
 

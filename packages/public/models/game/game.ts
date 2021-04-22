@@ -1,6 +1,7 @@
-import {PieceType} from "./piece";
+import {isSamePlayer, isWhite, PieceType} from "./piece";
 
 export type PlayerNum = 1 | 2 | 3 | 4;
+export type BoardNum = 1 | 2;
 
 export interface Game {
     /**
@@ -71,4 +72,44 @@ export interface Game {
 
 export function getPlayerNum(game: Game, username: string): PlayerNum {
     return game.playerUsernames.indexOf(username) as PlayerNum;
+}
+
+export function getBoardNum(game: Game, player: PlayerNum): BoardNum {
+    return (player < 2) ? 1 : 2;
+}
+
+export function getBoard(game: Game, player: PlayerNum): PieceType[][] {
+    return (player < 2) ? game.board1 : game.board2;
+}
+
+export function isPlayersPiece(player: PlayerNum, piece: PieceType) {
+    const playerIsWhite = player == 1 || player == 4;
+    return playerIsWhite == isWhite(piece);
+}
+
+export function getPieces(game: Game, player: PlayerNum): PieceType[] {
+    switch (player) {
+        case 1: return game.player1Pieces;
+        case 2: return game.player2Pieces;
+        case 3: return game.player3Pieces;
+        case 4: return game.player4Pieces;
+    }
+}
+
+export function getOpponent(game: Game, player: PlayerNum): PlayerNum {
+    switch (player) {
+        case 1: return 2;
+        case 2: return 1;
+        case 3: return 4;
+        case 4: return 3;
+    }
+}
+
+export function getAlly(game: Game, player: PlayerNum): PlayerNum {
+    switch (player) {
+        case 1: return 3;
+        case 2: return 4;
+        case 3: return 1;
+        case 4: return 2;
+    }
 }
