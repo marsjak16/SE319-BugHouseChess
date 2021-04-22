@@ -139,181 +139,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                                 </tr>
                             </table>
                         </div>
-
-                        <table id="board1" style={chessTable}>
-							{/*{this.makeFileHeadings()}*/}
-							<tr>
-                                <th></th>
-                                <th>A</th>
-                                <th>B</th>
-                                <th>C</th>
-                                <th>D</th>
-                                <th>E</th>
-                                <th>F</th>
-                                <th>G</th>
-                                <th>H</th>
-                            </tr>
-
-                            <tr id="8">
-                                <th>8</th>
-                                <td id="8A" style={whiteSquare}
-                                    onClick={this.pieceClick.bind(this, 0, 0, 1)}>{GamePage.renderPiece(this.state.game?.board1[0][0])}</td>
-                                <td id="8B"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[0][1])}</td>
-                                <td id="8C"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[0][2])}</td>
-                                <td id="8D"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[0][3])}</td>
-                                <td id="8E"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[0][4])}</td>
-                                <td id="8F"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[0][5])}</td>
-                                <td id="8G"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[0][6])}</td>
-                                <td id="8H"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[0][7])}</td>
-                            </tr>
-
-                            <tr id="7">
-                                <th>7</th>
-                                <td id="7A"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[1][0])}</td>
-                                <td id="7B"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[1][1])}</td>
-                                <td id="7C"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[1][2])}</td>
-                                <td id="7D"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[1][3])}</td>
-                                <td id="7E"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[1][4])}</td>
-                                <td id="7F"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[1][5])}</td>
-                                <td id="7G"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[1][6])}</td>
-                                <td id="7H"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[1][7])}</td>
-                            </tr>
-
-                            <tr id="r6">
-                                <th>6</th>
-                                <td id="6A"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[2][0])}</td>
-                                <td id="6B"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[2][1])}</td>
-                                <td id="6C"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[2][2])}</td>
-                                <td id="6D"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[2][3])}</td>
-                                <td id="6E"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[2][4])}</td>
-                                <td id="6F"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[2][5])}</td>
-                                <td id="6G"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[2][6])}</td>
-                                <td id="6H"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[2][7])}</td>
-                            </tr>
-
-                            <tr id="r5">
-                                <th>5</th>
-                                <td id="5A"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[3][0])}</td>
-                                <td id="5B"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[3][1])}</td>
-                                <td id="5C"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[3][2])}</td>
-                                <td id="5D"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[3][3])}</td>
-                                <td id="5E"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[3][4])}</td>
-                                <td id="5F"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[3][5])}</td>
-                                <td id="5G"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[3][6])}</td>
-                                <td id="5H"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[3][7])}</td>
-                            </tr>
-
-                            <tr id="r4">
-                                <th>4</th>
-                                <td id="4A"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[4][0])}</td>
-                                <td id="4B"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[4][1])}</td>
-                                <td id="4C"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[4][2])}</td>
-                                <td id="4D"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[4][3])}</td>
-                                <td id="4E"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[4][4])}</td>
-                                <td id="4F"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[4][5])}</td>
-                                <td id="4G"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[4][6])}</td>
-                                <td id="4H"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[4][7])}</td>
-                            </tr>
-
-                            <tr id="r3">
-                                <th>3</th>
-                                <td id="3A"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[5][0])}</td>
-                                <td id="3B"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[5][1])}</td>
-                                <td id="3C"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[5][2])}</td>
-                                <td id="3D"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[5][3])}</td>
-                                <td id="3E"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[5][4])}</td>
-                                <td id="3F"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[5][5])}</td>
-                                <td id="3G"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[5][6])}</td>
-                                <td id="3H"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[5][7])}</td>
-                            </tr>
-
-                            <tr id="r2">
-                                <th>2</th>
-                                <td id="2A"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[6][0])}</td>
-                                <td id="2B"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[6][1])}</td>
-                                <td id="2C"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[6][2])}</td>
-                                <td id="2D"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[6][3])}</td>
-                                <td id="2E"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[6][4])}</td>
-                                <td id="2F"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[6][5])}</td>
-                                <td id="2G"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[6][6])}</td>
-                                <td id="2H"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[6][7])}</td>
-                            </tr>
-
-                            <tr id="r1">
-                                <th>1</th>
-                                <td id="1A"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[7][0])}</td>
-                                <td id="1B"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[7][1])}</td>
-                                <td id="1C"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[7][2])}</td>
-                                <td id="1D"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[7][3])}</td>
-                                <td id="1E"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[7][4])}</td>
-                                <td id="1F"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[7][5])}</td>
-                                <td id="1G"
-                                    style={blackSquare}>{GamePage.renderPiece(this.state.game?.board1[7][6])}</td>
-                                <td id="1H"
-                                    style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board1[7][7])}</td>
-                            </tr>
-                        </table>
+                        {this.makeBoard1()}
                     </div>
                 </div>
                 <div style={chessDiv}>
@@ -340,127 +166,51 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                             </tr>
                         </table>
                     </div>
-                    <table id="board2" style={chessTable}>
-
-                        <tr>
-                            <th></th>
-                            <th>A</th>
-                            <th>B</th>
-                            <th>C</th>
-                            <th>D</th>
-                            <th>E</th>
-                            <th>F</th>
-                            <th>G</th>
-                            <th>H</th>
-                        </tr>
-
-                        <tr id="r8">
-                            <th>8</th>
-                            <td id="8A" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[0][0])}</td>
-                            <td id="8B" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[0][1])}</td>
-                            <td id="8C" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[0][2])}</td>
-                            <td id="8D" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[0][3])}</td>
-                            <td id="8E" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[0][4])}</td>
-                            <td id="8F" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[0][5])}</td>
-                            <td id="8G" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[0][6])}</td>
-                            <td id="8H" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[0][7])}</td>
-                        </tr>
-
-                        <tr id="7">
-                            <th>7</th>
-                            <td id="7A" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[1][0])}</td>
-                            <td id="7B" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[1][1])}</td>
-                            <td id="7C" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[1][2])}</td>
-                            <td id="7D" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[1][3])}</td>
-                            <td id="7E" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[1][4])}</td>
-                            <td id="7F" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[1][5])}</td>
-                            <td id="7G" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[1][6])}</td>
-                            <td id="7H" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[1][7])}</td>
-                        </tr>
-
-                        <tr id="r6">
-                            <th>6</th>
-                            <td id="6A" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[2][0])}</td>
-                            <td id="6B" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[2][1])}</td>
-                            <td id="6C" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[2][2])}</td>
-                            <td id="6D" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[2][3])}</td>
-                            <td id="6E" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[2][4])}</td>
-                            <td id="6F" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[2][5])}</td>
-                            <td id="6G" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[2][6])}</td>
-                            <td id="6H" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[2][7])}</td>
-                        </tr>
-
-                        <tr id="r5">
-                            <th>5</th>
-                            <td id="5A" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[3][0])}</td>
-                            <td id="5B" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[3][1])}</td>
-                            <td id="5C" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[3][2])}</td>
-                            <td id="5D" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[3][3])}</td>
-                            <td id="5E" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[3][4])}</td>
-                            <td id="5F" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[3][5])}</td>
-                            <td id="5G" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[3][6])}</td>
-                            <td id="5H" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[3][7])}</td>
-                        </tr>
-
-                        <tr id="r4">
-                            <th>4</th>
-                            <td id="4A" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[4][0])}</td>
-                            <td id="4B" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[4][1])}</td>
-                            <td id="4C" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[4][2])}</td>
-                            <td id="4D" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[4][3])}</td>
-                            <td id="4E" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[4][4])}</td>
-                            <td id="4F" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[4][5])}</td>
-                            <td id="4G" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[4][6])}</td>
-                            <td id="4H" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[4][7])}</td>
-                        </tr>
-
-                        <tr id="r3">
-                            <th>3</th>
-                            <td id="3A" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[5][0])}</td>
-                            <td id="3B" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[5][1])}</td>
-                            <td id="3C" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[5][2])}</td>
-                            <td id="3D" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[5][3])}</td>
-                            <td id="3E" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[5][4])}</td>
-                            <td id="3F" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[5][5])}</td>
-                            <td id="3G" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[5][6])}</td>
-                            <td id="3H" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[5][7])}</td>
-                        </tr>
-
-                        <tr id="r2">
-                            <th>2</th>
-                            <td id="2A" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[6][0])}</td>
-                            <td id="2B" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[6][1])}</td>
-                            <td id="2C" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[6][2])}</td>
-                            <td id="2D" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[6][3])}</td>
-                            <td id="2E" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[6][4])}</td>
-                            <td id="2F" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[6][5])}</td>
-                            <td id="2G" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[6][6])}</td>
-                            <td id="2H" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[6][7])}</td>
-                        </tr>
-
-                        <tr id="r1">
-                            <th>1</th>
-                            <td id="1A" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[7][0])}</td>
-                            <td id="1B" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[7][1])}</td>
-                            <td id="1C" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[7][2])}</td>
-                            <td id="1D" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[7][3])}</td>
-                            <td id="1E" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[7][4])}</td>
-                            <td id="1F" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[7][5])}</td>
-                            <td id="1G" style={blackSquare}>{GamePage.renderPiece(this.state.game?.board2[7][6])}</td>
-                            <td id="1H" style={whiteSquare}>{GamePage.renderPiece(this.state.game?.board2[7][7])}</td>
-                        </tr>
-                    </table>
+                    {this.makeBoard2()}
                 </div>
             </div>);
     }
 
-    makeFileHeadings(): ReactElement {
-        return <tr>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <td>{fileName}</td>)}</tr>;
-	}
-
-	makeBoardRow(row: number): ReactElement {
-        return <tr id={"r" + row}></tr>
+    makeBoard2FileHeadings(): ReactElement {
+        return <tr><th></th>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <th>{fileName}</th>)}</tr>;
     }
 
+    makeBoard2Row(row: number): ReactElement {
+        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0,1,2,3,4,5,6,7].map(
+            rowNum => <td style={rowNum%2==row%2 ? whiteSquare: blackSquare}>
+                {GamePage.renderPiece(this.state.game?.board1[8-row][rowNum])}</td>)}
+        </tr>
+    }
 
+    makeBoardRow(row: number, board:number): ReactElement {
+        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0,1,2,3,4,5,6,7].map(
+            rowNum => <td style={rowNum%2==row%2 ? whiteSquare: blackSquare}>
+                {GamePage.renderPiece(this.state.game?.board1[8-row][rowNum])}</td>)}
+        </tr>
+    }
+
+    makeBoard2(): ReactElement{
+        return <table id="board2" style={chessTable}>
+            {this.makeBoard2FileHeadings()}
+            {[8,7,6,5,4,3,2,1].reverse().map(row => this.makeBoard2Row(row))}
+        </table>
+    }
+
+    makeBoard1FileHeadings(): ReactElement {
+        return <tr><th></th>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].reverse().map(fileName => <th>{fileName}</th>)}</tr>;
+	}
+
+    makeBoard1Row(row: number): ReactElement {
+        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0,1,2,3,4,5,6,7].map(
+            rowNum => <td style={rowNum%2==row%2 ? blackSquare: whiteSquare}>
+                {GamePage.renderPiece(this.state.game?.board1[8-row][rowNum])}</td>)}
+        </tr>
+    }
+
+    makeBoard1(): ReactElement{
+        return <table id="board1" style={chessTable}>
+            {this.makeBoard1FileHeadings()}
+            {[8,7,6,5,4,3,2,1].map(row => this.makeBoard1Row(row))}
+        </table>
+    }
 }
