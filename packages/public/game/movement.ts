@@ -279,6 +279,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
         pushIfFreeOrCanTake(pieceRow + 1, pieceCol - 1);
         pushIfFreeOrCanTake(pieceRow, pieceCol - 1);
     }
-    
+
     return movements;
 }

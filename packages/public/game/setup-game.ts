@@ -53,7 +53,7 @@ export function setupGame(config: GameConfig): Game {
         game1Turn: 1,
         game2Turn: 3,
         board1: setupBoard(),
-        board2: setupBoard(true),c
+        board2: setupBoard(true),
         player1Pieces: [],
         player2Pieces: [],
         player3Pieces: [],
