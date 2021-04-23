@@ -10,12 +10,12 @@ import {renderPiece, Square, SquareColor} from "./library/square";
 import {PieceMoveRequest} from "../../../public/models/game/piece-move-request";
 import {PossibleMovement} from "../../../public/models/game/possible-movement";
 import _ from "lodash";
-import {MoveError} from "../../../public/models/game/move-error";
-import {PlacementError} from "../../../public/models/game/placement-error";
 import {Scorecard} from "./scorecard";
 import {PlacePiece} from "../../../public/models/game/place-piece";
 import {isWhite, PieceType} from "../../../public/models/game/piece";
 import {PlacementRequest} from "../../../public/models/game/placement-request";
+import {Notifications} from "./notifications";
+import {GameOver} from "./game-over";
 
 const chessTable: CSSProperties = {
     backgroundColor: 'lightgrey',
@@ -50,15 +50,15 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     constructor(props: GamePageProps) {
         super(props);
 
-        this.state = {};
-    }
-
-    componentDidMount(): void {
         this.socket = io(Config.apiUrl + `/game/${this.props.match.params.gameId}`, {
             // @ts-ignore
             withCredentials: true
         });
 
+        this.state = {};
+    }
+
+    componentDidMount(): void {
         this.socket.on('auth', (result: AuthenticationResult) => {
             if (!result.authenticated) {
                 this.props.history.push('/');
@@ -82,14 +82,6 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
             newState.placements = options;
             this.setState(newState);
         });
-
-        this.socket.on('moveError', (error: MoveError) => {
-            console.log(error.message);
-        });
-
-        this.socket.on('placementError', (error: PlacementError) => {
-            console.log(error.message);
-        });
     }
 
     componentWillUnmount(): void {
@@ -99,13 +91,16 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     render() {
         return (
             <div>
+                <div>
+                    {(this.state.game?.winningTeam) ? <GameOver win={true}/> : null}
+                </div>
+                <Notifications socket={this.socket} usernames={this.state.game?.playerUsernames}/>
                 <div style={chessDiv}>
                     <div style={{float: 'right'}}>
                         <Scorecard username={this.state.game?.playerUsernames?.[0]}
                                    pieces={this.state.game?.player1Pieces}
                                    isTurn={this.state.game?.game1Turn == 1}
-                                   onClick={p => this.onPieceClick(p, 1)}
-                                    />
+                                   onClick={p => this.onPieceClick(p, 1)}/>
                         {this.makeBoard1()}
                         <Scorecard username={this.state.game?.playerUsernames?.[1]}
                                    pieces={this.state.game?.player2Pieces}
@@ -165,7 +160,6 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                 return p.toRow == row && p.toCol == col && getBoardNum(p.playerNum) == boardNum;
             });
             if (move) {
-                console.log(move);
                 this.socket.emit('makeMove', move);
             } else {
                 const movementRequest: PieceMoveRequest = {row, col, boardNum};
@@ -180,28 +174,34 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     }
 
     private static makeFileHeadings(): ReactElement {
-        return <tr><th/>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <th>{fileName}</th>)}</tr>;
+        return <tr key={'header'}><td/>{['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'].map(fileName => <td key={fileName}>{fileName}</td>)}</tr>;
     }
 
     private makeBoard2Row(row: number): ReactElement {
-        return <tr id={"r" + (9 - row)}><th>{9 - row}</th>{[0, 1, 2, 3, 4, 5, 6, 7].map(
-            col => <Square highlighted={this.highlighted(row, col, 2)}
-                              color={col % 2 == row % 2 ? SquareColor.WHITE : SquareColor.BLACK}
-                              onClick={() => this.onSquareClick(row, col, 2)}>
+        return <tr key={row} id={"r" + (9 - row)}><th>{9 - row}</th>{[0, 1, 2, 3, 4, 5, 6, 7].map(
+            col => <Square key={`${col}${row}`}
+                           highlighted={this.highlighted(row, col, 2)}
+                           color={col % 2 == row % 2 ? SquareColor.WHITE : SquareColor.BLACK}
+                           onClick={() => this.onSquareClick(row, col, 2)}>
                 {renderPiece(this.state.game?.board2[row][col])}</Square>)}
         </tr>
     }
 
     private makeBoard2(): ReactElement{
         return <table id="board2" style={chessTable}>
-            {GamePage.makeFileHeadings()}
-            {[7, 6, 5, 4, 3, 2, 1, 0].reverse().map(row => this.makeBoard2Row(row))}
+            <thead>
+                {GamePage.makeFileHeadings()}
+            </thead>
+            <tbody>
+                {[7, 6, 5, 4, 3, 2, 1, 0].map(row => this.makeBoard2Row(row))}
+            </tbody>
         </table>
     }
 
     private makeBoard1Row(row: number): ReactElement {
-        return <tr id={"r" + (9-row)}><th>{9-row}</th>{[0, 1, 2, 3, 4, 5, 6, 7].map(
-            col => <Square highlighted={this.highlighted(7 - row, col, 1)}
+        return <tr key={row} id={"r" + (9-row)}><th>{9-row}</th>{[0, 1, 2, 3, 4, 5, 6, 7].map(
+            col => <Square key={`${col}${row}`}
+                           highlighted={this.highlighted(7 - row, col, 1)}
                            color={col % 2 == row % 2 ? SquareColor.BLACK: SquareColor.WHITE}
                            onClick={() => this.onSquareClick(7 - row, col, 1)}>
                 {renderPiece(this.state.game?.board1[7 - row][col])}</Square>)}
@@ -210,8 +210,12 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
 
     private makeBoard1(): ReactElement{
         return <table id="board1" style={chessTable}>
-            {GamePage.makeFileHeadings()}
-            {[7, 6, 5, 4, 3, 2, 1, 0].map(row => this.makeBoard1Row(row))}
+            <thead>
+                {GamePage.makeFileHeadings()}
+            </thead>
+            <tbody>
+                {[7, 6, 5, 4, 3, 2, 1, 0].map(row => this.makeBoard1Row(row))}
+            </tbody>
         </table>
     }
 }

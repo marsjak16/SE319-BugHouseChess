@@ -129,9 +129,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     const pieceRow = moveRequest.row;
     const pieceCol = moveRequest.col;
 
-    console.log(moveRequest);
-    console.log(piece);
-
     const isOnBoard = (row: number, col: number): boolean => {
         return 0 <= col && col <= 7 && 0 <= row && row <= 7;
     };
@@ -147,9 +144,7 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     const movements: PossibleMovement[] = [];
 
     const pushIfFree = (row: number, col: number) => {
-        console.log(`push if free ${row} ${col}`);
         if (isOpen(row, col)) {
-            console.log('push!');
             movements.push({
                 fromCol: moveRequest.col,
                 fromRow: moveRequest.row,
@@ -161,9 +156,7 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     };
 
     const pushIfCanTake = (row: number, col: number) => {
-        console.log(`push if can take ${row} ${col}`);
         if (isOccupied(row, col) && !isSamePlayer(piece, board[row][col])) {
-            console.log('push!');
             movements.push({
                 fromCol: moveRequest.col,
                 fromRow: moveRequest.row,
@@ -175,13 +168,11 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     };
 
     const pushIfFreeOrCanTake = (row: number, col: number) => {
-        console.log(`push if free or can take ${row} ${col}`);
         pushIfFree(row, col);
         pushIfCanTake(row, col);
     };
 
     if ((boardNum == 1 && piece == PieceType.WHITE_PAWN) || (boardNum == 2 && piece == PieceType.BLACK_PAWN)) {
-        console.log('top pawn');
         if (pieceRow == 1) {
             pushIfFree(pieceRow + 2, pieceCol);
         }
@@ -192,7 +183,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     }
 
     if ((boardNum == 1 && piece == PieceType.BLACK_PAWN) || (boardNum == 2 && piece == PieceType.WHITE_PAWN)) {
-        console.log('bottom pawn');
         if (pieceRow == 6) {
             pushIfFree(pieceRow - 2, pieceCol);
         }
@@ -203,7 +193,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     }
 
     if (piece == PieceType.WHITE_ROOK || piece == PieceType.BLACK_ROOK || piece == PieceType.WHITE_QUEEN || piece == PieceType.BLACK_QUEEN) {
-        console.log('rook');
         for (let row = pieceRow + 1; row < 8; row++) {
             pushIfFreeOrCanTake(row, pieceCol);
 
@@ -238,7 +227,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     }
 
     if (piece == PieceType.WHITE_KNIGHT || piece == PieceType.BLACK_KNIGHT) {
-        console.log('knight');
         [-1, 1].forEach(rowSign => {
             [-1, 1].forEach(colSign => {
                 pushIfFreeOrCanTake(pieceRow + rowSign, pieceCol + 2 * colSign);
@@ -248,7 +236,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     }
 
     if (piece == PieceType.WHITE_BISHOP || piece == PieceType.BLACK_BISHOP || piece == PieceType.WHITE_QUEEN || piece == PieceType.BLACK_QUEEN) {
-        console.log('bishop');
         for (let row = pieceRow + 1, col = pieceCol + 1; row < 8 && col < 8; row++, col++) {
             pushIfFreeOrCanTake(row, col);
 
@@ -283,7 +270,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
     }
 
     if (piece == PieceType.WHITE_KING || piece == PieceType.BLACK_KING) {
-        console.log('king');
         pushIfFreeOrCanTake(pieceRow - 1, pieceCol - 1);
         pushIfFreeOrCanTake(pieceRow - 1, pieceCol);
         pushIfFreeOrCanTake(pieceRow - 1, pieceCol + 1);
@@ -293,8 +279,6 @@ export function findMovements(game: Game, moveRequest: PieceMoveRequest): Possib
         pushIfFreeOrCanTake(pieceRow + 1, pieceCol - 1);
         pushIfFreeOrCanTake(pieceRow, pieceCol - 1);
     }
-
-    console.log(movements);
 
     return movements;
 }

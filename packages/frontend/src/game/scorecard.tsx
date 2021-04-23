@@ -25,6 +25,7 @@ export class Scorecard extends Component<ScorecardProps> {
     render(): ReactElement {
         return <div style={{paddingBottom: '10px'}}>
             <table>
+                <tbody>
                 <tr>
                     <td>
                         <h5 style={{textAlign: 'left', ...((this.props.isTurn) ? isTurnStyle : {})}}>{this.props.username ?? 'Player 1'}</h5>
@@ -36,15 +37,18 @@ export class Scorecard extends Component<ScorecardProps> {
                 <tr>
                     <td style={{backgroundColor: 'lightgrey'}} colSpan={2}>
                         <table style={{width: '505px', height: '70px'}}>
+                            <tbody>
                             <tr>
                                 {this.props.pieces?.map(p => {
                                     return <ScorecardSquare onClick={() => this.props.onClick(p)}>
                                         {renderPiece(p)}
                                     </ScorecardSquare>})}
                             </tr>
+                            </tbody>
                         </table>
                     </td>
                 </tr>
+                </tbody>
             </table>
         </div>
     }

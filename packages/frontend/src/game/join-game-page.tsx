@@ -51,7 +51,6 @@ export class JoinGamePage extends React.Component<JoinGameProps, JoinGameState> 
     }
 
     render(): ReactElement {
-        console.log(this.state.status);
         if (this.state.status?.inQueue) {
             return <div>
                 <div>In Queue with {this.state.status.numInQueue} other players</div>
