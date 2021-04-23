@@ -4,7 +4,7 @@ import {match} from "react-router-dom";
 import {Config} from "../config/config";
 import {AuthenticationResult} from "../../../public/models/account/authentication-result";
 import * as H from "history";
-import {BoardNum, Game, getBoardNum} from "../../../public/models/game/game";
+import {BoardNum, Game, getAlly, getBoardNum, getPlayerNum} from "../../../public/models/game/game";
 import {UserModel} from "../../../public/models/account/user-model";
 import {renderPiece, Square, SquareColor} from "./library/square";
 import {PieceMoveRequest} from "../../../public/models/game/piece-move-request";
@@ -89,10 +89,16 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
     }
 
     render() {
+        let gameOver: ReactElement | undefined;
+        if (this.state.game?.winningPlayer && this.props.user) {
+            const player = getPlayerNum(this.state.game, this.props.user?.username);
+            gameOver = <GameOver win={player == this.state.game?.winningPlayer || getAlly(player) == this.state.game?.winningPlayer}/>
+        }
+
         return (
             <div>
                 <div>
-                    {(this.state.game?.winningTeam) ? <GameOver win={true}/> : null}
+                    {gameOver}
                 </div>
                 <Notifications socket={this.socket} usernames={this.state.game?.playerUsernames}/>
                 <div style={chessDiv}>
@@ -193,7 +199,7 @@ export class GamePage extends Component<GamePageProps, GamePageState> {
                 {GamePage.makeFileHeadings()}
             </thead>
             <tbody>
-                {[7, 6, 5, 4, 3, 2, 1, 0].map(row => this.makeBoard2Row(row))}
+                {[0, 1, 2, 3, 4, 5, 6, 7].map(row => this.makeBoard2Row(row))}
             </tbody>
         </table>
     }

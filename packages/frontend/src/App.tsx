@@ -48,7 +48,7 @@ export class App extends React.Component<AppProps, AppState> {
                     </header>
                     <Switch>
                         <Route path='/join-game' render={(props) => <JoinGamePage history={props.history}/>}/>
-                        <Route path='/game/:gameId' render={(props) => <GamePage history={props.history} match={props.match}/>}/>
+                        <Route path='/game/:gameId' render={(props) => <GamePage history={props.history} match={props.match} user={this.state.user}/>}/>
                         <Route path='/login' render={(props) => <LoginPage history={props.history} loginCallback={user => this.login(user)}/>}/>
                         <Route path='/register' render={(props) => <RegisterPage history={props.history} registerCallback={user => this.authService.register(user)}/>}/>
                         <Route render={() => <Link className='btn btn-primary' type='button' to='/join-game'>Start Playing!</Link>}/>

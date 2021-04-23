@@ -11,7 +11,7 @@ export function makeMove(game: Game, movement: PossibleMovement): Game {
     const board = getBoard(gameCopy, movement.playerNum);
 
     if (board[movement.toRow][movement.toCol] != PieceType.EMPTY) {
-        const pieces = getPieces(gameCopy, getAlly(this.game, movement.playerNum));
+        const pieces = getPieces(gameCopy, getAlly(movement.playerNum));
         pieces.push(board[movement.toRow][movement.toCol]);
     }
 

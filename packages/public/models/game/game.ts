@@ -12,7 +12,7 @@ export interface Game {
     /**
      * Who has won the game or undefined if the game is still in progress
      */
-    winningTeam?: 1 | 2;
+    winningPlayer?: PlayerNum;
 
     /**
      * Time that the clock was started as an ISO 8601 timestamp
@@ -105,7 +105,7 @@ export function getOpponent(player: PlayerNum): PlayerNum {
     }
 }
 
-export function getAlly(game: Game, player: PlayerNum): PlayerNum {
+export function getAlly(player: PlayerNum): PlayerNum {
     switch (player) {
         case 1: return 4;
         case 2: return 3;

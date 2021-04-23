@@ -57,7 +57,7 @@ export class GameServer {
 
             socket.on('makePlacement', (placement: PlacePiece) => {
                 // If the game is over don't allow any moves
-                if (this.game.winningTeam) {
+                if (this.game.winningPlayer) {
                     socket.emit('placementError', <PlacementError>{
                         message: "You cannot place pieces once the game is over"
                     });
@@ -139,7 +139,7 @@ export class GameServer {
                             type: CheckType.CHECKMATE
                         });
 
-                        this.game.winningTeam = getBoardNum(placement.playerNum);
+                        this.game.winningPlayer = placement.playerNum;
                         io.emit('game', this.game);
                     } else {
                         io.emit('check', <CheckStatus>{
@@ -152,7 +152,7 @@ export class GameServer {
 
             socket.on('makeMove', (movement: PossibleMovement) => {
                 // If the game is over don't allow any moves
-                if (this.game.winningTeam) {
+                if (this.game.winningPlayer) {
                     socket.emit('moveError', <MoveError>{
                         message: "You cannot move once the game is over"
                     });
@@ -227,7 +227,7 @@ export class GameServer {
                             type: CheckType.CHECKMATE
                         });
 
-                        this.game.winningTeam = getBoardNum(movement.playerNum);
+                        this.game.winningPlayer = movement.playerNum;
                         io.emit('game', this.game);
                     } else {
                         io.emit('check', <CheckStatus>{
