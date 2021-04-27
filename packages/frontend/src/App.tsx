@@ -10,6 +10,7 @@ import {Header} from "./header/header";
 import {LoginModel} from "../../public/models/account/login-model";
 import {RegisterPage} from "./login/register-page";
 import {JoinGamePage} from "./game/join-game-page";
+import {MainPage} from "./main/main-page";
 
 export interface AppProps {}
 
@@ -51,7 +52,8 @@ export class App extends React.Component<AppProps, AppState> {
                         <Route path='/game/:gameId' render={(props) => <GamePage history={props.history} match={props.match} user={this.state.user}/>}/>
                         <Route path='/login' render={(props) => <LoginPage history={props.history} loginCallback={user => this.login(user)}/>}/>
                         <Route path='/register' render={(props) => <RegisterPage history={props.history} registerCallback={user => this.authService.register(user)}/>}/>
-                        <Route render={() => <Link className='btn btn-primary' type='button' to='/join-game'>Start Playing!</Link>}/>
+						<Route path='/main' render={(props) => <MainPage history={props.history}/>}/>
+                        <Route render={(props) => <MainPage history={props.history}/>}/>
                     </Switch>
                 </BrowserRouter>
             </div>
