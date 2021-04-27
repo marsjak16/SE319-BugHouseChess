@@ -1,5 +1,5 @@
 import * as H from "history";
-import React, {ReactElement} from "react";
+import React, {CSSProperties, ReactElement} from "react";
 import io from "socket.io-client";
 import {Config} from "../config/config";
 import {AuthenticationResult} from "../../../public/models/account/authentication-result";
@@ -13,6 +13,12 @@ interface JoinGameProps  {
 interface JoinGameState {
     status?: QueueStatus
 }
+
+const mainDiv: CSSProperties = {
+	margin: 'auto',
+    width: '50%',
+	textAlign: 'center',
+};
 
 export class JoinGamePage extends React.Component<JoinGameProps, JoinGameState> {
     private socket!: SocketIOClient.Socket;
@@ -52,7 +58,7 @@ export class JoinGamePage extends React.Component<JoinGameProps, JoinGameState> 
 
     render(): ReactElement {
         if (this.state.status?.inQueue) {
-            return <div>
+            return <div style={mainDiv}>
                 <div>In Queue with {this.state.status.numInQueue} other players</div>
                 <input className='btn btn-primary mt-2'
                        type='button'
@@ -61,10 +67,12 @@ export class JoinGamePage extends React.Component<JoinGameProps, JoinGameState> 
             </div>
         }
 
-        return <input className='btn btn-primary'
+        return <div style={mainDiv}>
+					<input className='btn btn-primary'
                       type='button'
                       value='Join Queue'
                       onClick={() => this.toggleQueue()}/>
+				</div>
     }
 
     private toggleQueue(): void {
